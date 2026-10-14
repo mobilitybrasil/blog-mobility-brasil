@@ -3,6 +3,7 @@ import { ABOUT_URL, STORE_URL } from "@/lib/site";
 import { MessageCaptionsIcon } from "@/components/layout/icons";
 import type { Category } from "@/types/wordpress";
 import { BlogHeroCategoryMenu } from "./BlogHeroCategoryMenu";
+import { BlogSearchForm } from "./BlogSearchForm";
 
 interface BlogHeroProps {
   categories: Category[];
@@ -53,6 +54,8 @@ export function BlogHero({ categories }: BlogHeroProps) {
         </a>
         <BlogHeroCategoryMenu categories={categories} />
       </div>
+
+      <BlogSearchForm />
     </section>
   );
 }

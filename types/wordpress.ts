@@ -185,6 +185,7 @@ export interface GetPostsVariables {
   first?: number;
   after?: string | null;
   categorySlug?: string | null;
+  search?: string | null;
   /** Quando `true`, retorna apenas posts com ACF `postHighlight = true`. */
   highlightedOnly?: boolean;
 }
