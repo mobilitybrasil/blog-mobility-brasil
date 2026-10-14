@@ -36,7 +36,9 @@ export const CATEGORIES_QUERY = /* GraphQL */ `
   }
 `;
 
-export async function getCategories(): Promise<Category[]> {
+export async function getCategories(options: {
+  fallbackToMocks?: boolean;
+} = {}): Promise<Category[]> {
   try {
     const data = await fetchGraphQL<GetCategoriesResponse>(
       CATEGORIES_QUERY,
@@ -47,8 +49,16 @@ export async function getCategories(): Promise<Category[]> {
       (category) => category.slug !== "uncategorized",
     );
     if (nodes.length > 0) return nodes;
-    return MOCK_CATEGORIES;
+    return options.fallbackToMocks === false ? [] : MOCK_CATEGORIES;
   } catch (error) {
+    if (options.fallbackToMocks === false) {
+      console.warn(
+        "[wordpress] getCategories falhou; retornando lista vazia para o sitemap.",
+        error instanceof Error ? error.message : error,
+      );
+      return [];
+    }
+
     console.warn(
       "[wordpress] getCategories falhou, usando MOCK_CATEGORIES.",
       error instanceof Error ? error.message : error,

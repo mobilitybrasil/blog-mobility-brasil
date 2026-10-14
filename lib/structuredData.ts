@@ -12,7 +12,7 @@ type JsonLdObject = Record<string, unknown>;
 
 const BLOG_NAME = "Blog Mobility Brasil";
 const BLOG_DESCRIPTION =
-  "Conteúdo sobre mobilidade urbana, sustentabilidade e tecnologia para empresas que querem mover o futuro.";
+  "Conteúdo sobre cadeiras de rodas, acessibilidade e tecnologia assistiva para apoiar escolhas de mobilidade no dia a dia.";
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
 const BLOG_ID = `${SITE_URL}/#blog`;
@@ -75,15 +75,15 @@ export function buildBlogHomeJsonLd(posts: PostListItem[]): JsonLdObject {
         inLanguage: "pt-BR",
         isPartOf: { "@id": WEBSITE_ID },
         publisher: { "@id": ORGANIZATION_ID },
-        blogPost: posts.map((post) => ({
-          "@type": "BlogPosting",
-          headline: stripHtml(post.title),
-          url: postUrl(post),
-          datePublished: post.date,
-          ...(post.featuredImage?.node?.sourceUrl
-            ? { image: post.featuredImage.node.sourceUrl }
-            : {}),
-        })),
+        mainEntity: {
+          "@type": "ItemList",
+          itemListElement: posts.map((post, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: postUrl(post),
+            name: stripHtml(post.title),
+          })),
+        },
       },
     ],
   };
@@ -153,9 +153,10 @@ export function buildPostJsonLd(post: Post): JsonLdObject[] {
     ...(post.tags?.nodes.length
       ? { keywords: post.tags.nodes.map((t) => t.name).join(", ") }
       : {}),
-    author: author
-      ? { "@type": "Person", name: author.name }
-      : { "@type": "Organization", name: "Mobility Brasil", url: STORE_URL },
+    author:
+      author && !author.name.includes("@")
+        ? { "@type": "Person", name: author.name }
+        : organization,
     publisher: organization,
     isPartOf: { "@id": BLOG_ID },
   };

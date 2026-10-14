@@ -202,10 +202,13 @@ export interface GetAllPostSlugsResponse {
   posts: {
     nodes: Array<{
       slug: string;
+      date: string;
+      modified: string | null;
       categories: {
         nodes: Array<Pick<CategoryNode, "slug">>;
       } | null;
     }>;
+    pageInfo: Pick<PageInfo, "hasNextPage" | "endCursor">;
   } | null;
 }
 
