@@ -165,7 +165,7 @@ export async function searchPosts(options: {
     const data = await fetchGraphQL<GetPostsResponse, GetPostsVariables>(
       POSTS_QUERY,
       variables,
-      { revalidate: 0, operationName: "SearchPosts" },
+      { revalidate: 0, operationName: "GetPosts" },
     );
     return {
       posts: data.posts?.nodes ?? [],
@@ -183,7 +183,7 @@ export async function searchPosts(options: {
     const basic = await fetchGraphQL<BasicPostsResponse, GetPostsVariables>(
       POSTS_BASIC_QUERY,
       variables,
-      { revalidate: 0, operationName: "SearchPostsBasic" },
+      { revalidate: 0, operationName: "GetPostsBasic" },
     );
     return {
       posts: (basic.posts?.nodes ?? []).map((post) => ({
