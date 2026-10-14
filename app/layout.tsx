@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     url: SITE_URL,
   },
   twitter: { card: "summary" },
+  verification: {
+    google: "AU9xWjED2iLEMEHRugX1nvQkv6IafdKiZkvjoZ2icoo",
+  },
 };
 
 export default function RootLayout({
