@@ -33,7 +33,7 @@ export async function generateStaticParams(): Promise<
   Array<{ category: string; slug: string }>
 > {
   const slugs = await getAllPostSlugs();
-  return slugs.map((s) => ({ category: s.category, slug: s.slug }));
+  return slugs.map(({ category, slug }) => ({ category, slug }));
 }
 
 export async function generateMetadata({
@@ -49,6 +49,12 @@ export async function generateMetadata({
     stripHtml(post.excerpt ?? "") || stripHtml(post.content).slice(0, 160);
   const ogImage =
     seo?.opengraphImage?.sourceUrl ?? post.featuredImage?.node?.sourceUrl ?? null;
+  const sourceSiteName = seo?.opengraphSiteName?.trim();
+  const openGraphSiteName =
+    sourceSiteName &&
+    !sourceSiteName.toLowerCase().includes(WORDPRESS_HOSTNAME.toLowerCase())
+      ? sourceSiteName
+      : "Blog Mobility Brasil";
 
   // Canonical/OG URL sempre derivados da rota real do Next — o
   // `seo.canonical`/`seo.opengraphUrl` do Yoast apontam para o domínio e a
@@ -77,7 +83,9 @@ export async function generateMetadata({
         fallbackDescription,
       type: "article",
       url: canonicalUrl,
-      siteName: seo?.opengraphSiteName ?? "Mobility Brasil",
+      siteName: openGraphSiteName,
+      publishedTime: post.date,
+      modifiedTime: post.modified ?? post.date,
       images: ogImage
         ? [
             {

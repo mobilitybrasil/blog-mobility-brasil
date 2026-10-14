@@ -39,11 +39,22 @@ const helveticaNeue = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Blog Mobility Brasil",
+    default: "Mobilidade, acessibilidade e tecnologia assistiva",
     template: "%s · Mobility Brasil",
   },
   description:
-    "Conteúdo sobre mobilidade urbana, sustentabilidade e tecnologia para empresas que querem mover o futuro.",
+    "Conteúdo sobre cadeiras de rodas, acessibilidade e tecnologia assistiva para apoiar escolhas de mobilidade no dia a dia.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: "Blog Mobility Brasil",
+    title: "Mobilidade, acessibilidade e tecnologia assistiva · Mobility Brasil",
+    description:
+      "Conteúdo sobre cadeiras de rodas, acessibilidade e tecnologia assistiva para apoiar escolhas de mobilidade no dia a dia.",
+    url: SITE_URL,
+  },
+  twitter: { card: "summary" },
 };
 
 export default function RootLayout({

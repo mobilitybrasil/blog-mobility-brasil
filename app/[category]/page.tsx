@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getCategories } from "@/lib/graphql/queries/categories";
 import { getPosts } from "@/lib/graphql/queries/posts";
 import { buildCategoryJsonLd } from "@/lib/structuredData";
+import { SITE_URL } from "@/lib/wordpress";
 import type { Category, CategoryNode } from "@/types/wordpress";
 
 export const revalidate = 3600;
@@ -39,11 +40,24 @@ export async function generateMetadata({
   const node = await findCategoryBySlug(category);
   if (!node) return { title: "Categoria não encontrada" };
 
+  const title = node.name;
+  const description =
+    node.description?.trim() ||
+    `Artigos sobre ${node.name.toLowerCase()}, mobilidade e tecnologia assistiva no Blog Mobility Brasil.`;
+  const canonicalUrl = `${SITE_URL}/${node.slug}`;
+
   return {
-    title: `${node.name} — Blog Mobility Brasil`,
-    description:
-      node.description ??
-      `Posts da categoria ${node.name} no Blog Mobility Brasil.`,
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      type: "website",
+      locale: "pt_BR",
+      siteName: "Blog Mobility Brasil",
+      title: `${title} · Blog Mobility Brasil`,
+      description,
+      url: canonicalUrl,
+    },
   };
 }
 

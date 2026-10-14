@@ -267,10 +267,16 @@ export async function getPosts(
  * em `app/[category]/[slug]/page.tsx`.
  */
 export const ALL_POST_SLUGS_QUERY = /* GraphQL */ `
-  query GetAllPostSlugs($first: Int = 100) {
-    posts(first: $first, where: { status: PUBLISH }) {
+  query GetAllPostSlugs($first: Int = 100, $after: String) {
+    posts(first: $first, after: $after, where: { status: PUBLISH }) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       nodes {
         slug
+        date
+        modified
         categories(first: 1) {
           nodes {
             slug
@@ -370,23 +376,65 @@ export async function getRelatedPosts(options: {
   return collected;
 }
 
-export async function getAllPostSlugs(): Promise<
-  Array<{ slug: string; category: string }>
+export async function getAllPostSlugs(options: {
+  fallbackToMocks?: boolean;
+} = {}): Promise<
+  Array<{
+    slug: string;
+    category: string;
+    date: string;
+    modified: string | null;
+  }>
 > {
   try {
-    const data = await fetchGraphQL<GetAllPostSlugsResponse>(
-      ALL_POST_SLUGS_QUERY,
-      undefined,
-      { tags: [cacheTags.posts], operationName: "GetAllPostSlugs" },
-    );
+    const allPosts: Array<{
+      slug: string;
+      category: string;
+      date: string;
+      modified: string | null;
+    }> = [];
+    let after: string | null = null;
+    const seenCursors = new Set<string>();
 
-    return (data.posts?.nodes ?? [])
-      .map((node) => {
-        const category = node.categories?.nodes[0]?.slug ?? "sem-categoria";
-        return { slug: node.slug, category };
-      })
-      .filter((p) => p.slug);
+    while (true) {
+      const data: GetAllPostSlugsResponse = await fetchGraphQL<
+        GetAllPostSlugsResponse,
+        { first: number; after: string | null }
+      >(
+        ALL_POST_SLUGS_QUERY,
+        { first: 100, after },
+        { tags: [cacheTags.posts], operationName: "GetAllPostSlugs" },
+      );
+      const page: GetAllPostSlugsResponse["posts"] = data.posts;
+
+      for (const node of page?.nodes ?? []) {
+        if (!node.slug) continue;
+        allPosts.push({
+          slug: node.slug,
+          category: node.categories?.nodes[0]?.slug ?? "sem-categoria",
+          date: node.date,
+          modified: node.modified,
+        });
+      }
+
+      const nextCursor: string | null | undefined = page?.pageInfo.endCursor;
+      if (!page?.pageInfo.hasNextPage || !nextCursor || seenCursors.has(nextCursor)) {
+        break;
+      }
+      seenCursors.add(nextCursor);
+      after = nextCursor;
+    }
+
+    return allPosts;
   } catch (error) {
+    if (options.fallbackToMocks === false) {
+      console.warn(
+        "[wordpress] getAllPostSlugs falhou; retornando lista vazia para o sitemap.",
+        error instanceof Error ? error.message : error,
+      );
+      return [];
+    }
+
     console.warn(
       "[wordpress] getAllPostSlugs falhou, usando MOCK_POSTS para generateStaticParams.",
       error instanceof Error ? error.message : error,
@@ -394,6 +442,8 @@ export async function getAllPostSlugs(): Promise<
     return MOCK_POSTS.map((p) => ({
       slug: p.slug,
       category: p.categories?.nodes[0]?.slug ?? "sem-categoria",
+      date: p.date,
+      modified: p.modified,
     }));
   }
 }

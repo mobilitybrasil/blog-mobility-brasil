@@ -7,7 +7,7 @@ import { searchPosts } from "@/lib/graphql/queries/posts";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Buscar artigos | Blog Mobility Brasil",
+  title: "Buscar artigos",
   description: "Encontre artigos, dicas e informações no Blog Mobility Brasil.",
   robots: { index: false, follow: true },
 };
