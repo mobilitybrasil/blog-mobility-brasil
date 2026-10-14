@@ -34,6 +34,11 @@ Updated: 2026-10-14
 - Submit the sitemap and inspect index coverage in Google Search Console and Bing Webmaster Tools. No Search Console or CrUX data was available during this audit.
 - Validate representative home, category, and article JSON-LD with Google's Rich Results Test and URL Inspection.
 
+#### Follow-up checks — 2026-10-14
+
+- Production `/uncategorized/hello-world` is publicly accessible and contains the default WordPress text “Welcome to WordPress. This is your first post. Edit or delete it, then start writing!”. It is shown as a related post and was present in the sitemap observed during this audit. Unpublish or remove it in WordPress, then confirm it disappears from the sitemap and no longer returns an indexable page.
+- Structured data is emitted as JSON-LD: homepage (`Organization`, `WebSite`, `Blog`, `ItemList`), category (`CollectionPage`, `ItemList`, `BreadcrumbList`), and article (`BlogPosting`, `BreadcrumbList`). A live article byline reads “Mobility Brasil”; the code previously described that exact author name as `Person`. The local code now maps that brand identity to the existing `Organization` entity. ESLint on `lib/structuredData.ts` and `tsc --noEmit` pass; production Rich Results validation remains to be run after deployment.
+
 ### P2 — Metadata coverage and AI search
 
 - Review the duplicated article title pair found in the crawl and decide whether to differentiate metadata, consolidate, or retain both based on search intent.

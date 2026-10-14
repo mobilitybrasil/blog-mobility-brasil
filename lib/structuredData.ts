@@ -35,6 +35,23 @@ function postUrl(post: Pick<PostListItem, "slug" | "categories">): string {
     : `${SITE_URL}/${post.slug}`;
 }
 
+function buildAuthorJsonLd(author: Post["author"]): JsonLdObject {
+  const name = author?.node?.name?.trim();
+  const normalizedName = name?.toLocaleLowerCase("pt-BR");
+
+  // O perfil editorial do WordPress pode representar a própria marca. Nesse
+  // caso, use a entidade Organization da Mobility Brasil, não uma Person.
+  if (
+    !name ||
+    name.includes("@") ||
+    normalizedName === "mobility brasil"
+  ) {
+    return organization;
+  }
+
+  return { "@type": "Person", name };
+}
+
 export function buildBreadcrumbJsonLd(
   items: Array<{ name: string; url?: string }>,
 ): JsonLdObject {
@@ -130,7 +147,6 @@ export function buildCategoryJsonLd(
 export function buildPostJsonLd(post: Post): JsonLdObject[] {
   const url = postUrl(post);
   const category = post.categories?.nodes[0];
-  const author = post.author?.node;
   const image = post.featuredImage?.node?.sourceUrl;
   const description =
     post.seo?.metaDesc ||
@@ -153,10 +169,7 @@ export function buildPostJsonLd(post: Post): JsonLdObject[] {
     ...(post.tags?.nodes.length
       ? { keywords: post.tags.nodes.map((t) => t.name).join(", ") }
       : {}),
-    author:
-      author && !author.name.includes("@")
-        ? { "@type": "Person", name: author.name }
-        : organization,
+    author: buildAuthorJsonLd(post.author),
     publisher: organization,
     isPartOf: { "@id": BLOG_ID },
   };
