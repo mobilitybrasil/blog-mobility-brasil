@@ -11,6 +11,7 @@ import {
   BarsIcon,
   CloseIcon,
   PersonIcon,
+  SearchIcon,
 } from "./icons";
 
 interface HeaderMobileMenuProps {
@@ -106,6 +107,16 @@ export function HeaderMobileMenu({ categories }: HeaderMobileMenuProps) {
           <div className="flex min-h-0 flex-1 flex-col">
             <nav className="flex-1 overflow-y-auto py-2" aria-label="Categorias">
               <ul>
+                <li>
+                  <Link
+                    href="/buscar"
+                    onClick={close}
+                    className="flex items-center gap-3 px-5 py-3 text-base font-medium text-[color:var(--color-brand-black)]"
+                  >
+                    <SearchIcon className="size-[18px]" />
+                    Buscar artigos
+                  </Link>
+                </li>
                 {categories.map((category) => {
                   const children = category.children?.nodes ?? [];
                   const hasChildren = children.length > 0;

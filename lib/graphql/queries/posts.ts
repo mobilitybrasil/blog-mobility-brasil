@@ -6,6 +6,7 @@ import type {
   GetAllPostSlugsResponse,
   GetPostsResponse,
   GetPostsVariables,
+  PageInfo,
   PostListItem,
 } from "@/types/wordpress";
 
@@ -18,7 +19,12 @@ import type {
 export const POSTS_QUERY = /* GraphQL */ `
   ${POST_LIST_FIELDS_FRAGMENT}
   ${SEO_FRAGMENT}
-  query GetPosts($first: Int = 12, $after: String, $categorySlug: String) {
+  query GetPosts(
+    $first: Int = 12
+    $after: String
+    $categorySlug: String
+    $search: String
+  ) {
     posts(
       first: $first
       after: $after
@@ -26,6 +32,7 @@ export const POSTS_QUERY = /* GraphQL */ `
         status: PUBLISH
         orderby: { field: DATE, order: DESC }
         categoryName: $categorySlug
+        search: $search
       }
     ) {
       pageInfo {
@@ -53,6 +60,7 @@ const POSTS_BASIC_QUERY = /* GraphQL */ `
     $first: Int = 12
     $after: String
     $categorySlug: String
+    $search: String
   ) {
     posts(
       first: $first
@@ -61,6 +69,7 @@ const POSTS_BASIC_QUERY = /* GraphQL */ `
         status: PUBLISH
         orderby: { field: DATE, order: DESC }
         categoryName: $categorySlug
+        search: $search
       }
     ) {
       pageInfo {
@@ -123,7 +132,75 @@ const POSTS_BASIC_QUERY = /* GraphQL */ `
 interface BasicPostsResponse {
   posts: {
     nodes: Array<Omit<PostListItem, "postSettings" | "seo">>;
+    pageInfo: PageInfo;
   } | null;
+}
+
+export interface SearchPostsResult {
+  posts: PostListItem[];
+  pageInfo: PageInfo | null;
+  error: boolean;
+}
+
+/**
+ * Busca artigos no WordPress sem recorrer a conteúdo de demonstração. A busca
+ * é dinâmica para evitar armazenar em cache cada combinação arbitrária de
+ * termos digitada por visitantes.
+ */
+export async function searchPosts(options: {
+  query: string;
+  after?: string | null;
+  first?: number;
+}): Promise<SearchPostsResult> {
+  const search = options.query.trim().slice(0, 100);
+  if (!search) return { posts: [], pageInfo: null, error: false };
+
+  const variables: GetPostsVariables = {
+    first: options.first ?? 12,
+    after: options.after ?? null,
+    search,
+  };
+
+  try {
+    const data = await fetchGraphQL<GetPostsResponse, GetPostsVariables>(
+      POSTS_QUERY,
+      variables,
+      { revalidate: 0, operationName: "GetPosts" },
+    );
+    return {
+      posts: data.posts?.nodes ?? [],
+      pageInfo: data.posts?.pageInfo ?? null,
+      error: false,
+    };
+  } catch (error) {
+    console.warn(
+      "[wordpress] busca com ACF/Yoast falhou, tentando query básica.",
+      error instanceof Error ? error.message : error,
+    );
+  }
+
+  try {
+    const basic = await fetchGraphQL<BasicPostsResponse, GetPostsVariables>(
+      POSTS_BASIC_QUERY,
+      variables,
+      { revalidate: 0, operationName: "GetPostsBasic" },
+    );
+    return {
+      posts: (basic.posts?.nodes ?? []).map((post) => ({
+        ...post,
+        postSettings: null,
+        seo: null,
+      })),
+      pageInfo: basic.posts?.pageInfo ?? null,
+      error: false,
+    };
+  } catch (error) {
+    console.error(
+      "[wordpress] busca básica também falhou.",
+      error instanceof Error ? error.message : error,
+    );
+    return { posts: [], pageInfo: null, error: true };
+  }
 }
 
 export async function getPosts(
@@ -136,6 +213,7 @@ export async function getPosts(
     first: variables.first ?? 12,
     after: variables.after ?? null,
     categorySlug: variables.categorySlug ?? null,
+    search: variables.search?.trim() || null,
   };
 
   let nodes: PostListItem[] | null = null;
