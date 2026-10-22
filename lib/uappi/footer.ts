@@ -33,6 +33,8 @@ const STORE_URL = (process.env.NEXT_PUBLIC_STORE_URL ?? "").replace(/\/$/, "");
 
 function toAbsoluteUrl(raw: string | null | undefined): string {
   if (!raw) return STORE_URL || "#";
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return "mailto:" + raw;
+  if (/^https?:\/\/mobilitybrasil\.wordpress\.com\/?$/i.test(raw)) return "https://blog.mobilitybrasil.com.br/";
   if (/^https?:\/\//i.test(raw)) return raw;
   if (raw.startsWith("#") || raw.startsWith("mailto:") || raw.startsWith("tel:")) {
     return raw;
