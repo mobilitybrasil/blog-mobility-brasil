@@ -103,15 +103,19 @@ export async function Footer() {
                     target={social.abrirEmNovaAba ? "_blank" : undefined}
                     rel={social.abrirEmNovaAba ? "noreferrer" : undefined}
                     aria-label={social.label ?? config.label}
-                    className="flex size-[30px] items-center justify-center rounded-full bg-white text-black"
+                    className={
+                      social.icone
+                        ? "block size-[30px] overflow-hidden rounded-full"
+                        : "flex size-[30px] items-center justify-center rounded-full bg-white text-black"
+                    }
                   >
                     {social.icone ? (
                       <Image
                         src={social.icone}
                         alt=""
-                        width={16}
-                        height={16}
-                        className="size-4 object-contain"
+                        width={30}
+                        height={30}
+                        className="size-[30px] object-contain"
                       />
                     ) : (
                       <Icon className="size-4" />
