@@ -28,8 +28,8 @@ interface UappiMenu {
 
 const FOOTER_CACHE_TAG = "footer";
 const FOOTER_REVALIDATE = 60 * 60;
-
 const STORE_URL = (process.env.NEXT_PUBLIC_STORE_URL ?? "").replace(/\/$/, "");
+const CURRENT_YEAR = new Date().getFullYear();
 
 function toAbsoluteUrl(raw: string | null | undefined): string {
   if (!raw) return STORE_URL || "#";
@@ -40,12 +40,12 @@ function toAbsoluteUrl(raw: string | null | undefined): string {
     return raw;
   }
   if (!STORE_URL) return raw;
-  return `${STORE_URL}/${raw.replace(/^\/+/, "")}`;
+  return STORE_URL + "/" + raw.replace(/^\/+/, "");
 }
 
 async function safeGetMenu(slug: string): Promise<UappiMenu | null> {
   try {
-    const data = await uappiGet<UappiMenu>(`/v2/front/struct/menus/${slug}`, {
+    const data = await uappiGet<UappiMenu>("/v2/front/struct/menus/" + slug, {
       tags: [FOOTER_CACHE_TAG],
       revalidate: FOOTER_REVALIDATE,
     });
@@ -53,7 +53,7 @@ async function safeGetMenu(slug: string): Promise<UappiMenu | null> {
     return data;
   } catch (error) {
     console.error(
-      `[uappi] getFooter: falha no menu "${slug}"`,
+      "[uappi] getFooter: falha no menu \"" + slug + "\"",
       error instanceof Error ? error.message : error,
     );
     return null;
@@ -93,7 +93,7 @@ function inferSocialNetwork(
   label: string,
   link: string,
 ): FooterSocialNetwork | null {
-  const haystack = `${link} ${label}`.toLowerCase();
+  const haystack = (link + " " + label).toLowerCase();
   for (const { network, patterns } of SOCIAL_NETWORK_HINTS) {
     if (patterns.some((p) => haystack.includes(p))) return network;
   }
@@ -109,7 +109,13 @@ function mapSocialMenu(menu: UappiMenu | null): FooterSocial[] {
     const network = inferSocialNetwork(item.label ?? "", item.link);
     if (!network || seen.has(network)) continue;
     seen.add(network);
-    result.push({ rede: network, url: toAbsoluteUrl(item.link) });
+    result.push({
+      rede: network,
+      url: toAbsoluteUrl(item.link),
+      label: item.label,
+      icone: item.icone || null,
+      abrirEmNovaAba: item.target === "_blank",
+    });
   }
   return result;
 }
@@ -117,30 +123,27 @@ function mapSocialMenu(menu: UappiMenu | null): FooterSocial[] {
 function mapCopyrightMenu(menu: UappiMenu | null): FooterData["bottom"] {
   if (!menu) return MOCK_FOOTER.bottom;
 
-  let copyright: string | null = null;
+  let logoUrl: string | null = null;
+  let logoAlt: string | null = null;
   const linksLegais: FooterLegalLink[] = [];
 
   for (const item of menu.menu) {
-    const hasIcone = Boolean(item.icone && item.icone.length > 0);
-    const labelLower = (item.label ?? "").toLowerCase();
-
-    if (hasIcone) {
-      // Logo — descartamos; o Footer.tsx renderiza /logo-mobility-white.svg fixo.
-      continue;
-    }
-    if (labelLower.includes("copyright")) {
-      copyright = item.link ?? null;
+    if (item.icone) {
+      logoUrl = item.icone;
+      logoAlt = item.label === "Logo Mobility" ? "Mobility Brasil" : item.label;
       continue;
     }
     if (item.label) {
+      // O item Copyright do painel da Uappi é um link para a política de privacidade.
       linksLegais.push({ label: item.label, url: resolveItemUrl(item) });
     }
   }
 
   return {
-    copyright,
+    logoUrl,
+    logoAlt,
+    copyright: "© " + CURRENT_YEAR + ", Mobility Brasil Importação e Comércio de Cadeiras de Rodas Ltda. Todos os direitos reservados.",
     linksLegais,
-    // Créditos técnicos não vêm da API Uappi (no Nuxt são hardcoded).
     textoTecnologia: "Tecnologia de e-commerce",
     urlTecnologia: "https://uappi.com.br",
     textoDesenvolvido: "Desenvolvido por",
