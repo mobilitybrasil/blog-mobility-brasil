@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: "secure.gravatar.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.mobilitybrasil.com.br",
+        pathname: "/upload/menu/**",
+      },
     ],
   },
 };
