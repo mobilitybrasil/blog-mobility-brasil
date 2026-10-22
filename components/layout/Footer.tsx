@@ -29,14 +29,8 @@ const SOCIAL_ICON_BY_NETWORK: Record<
 };
 
 /**
- * Footer global do site. Server Component — busca o conteúdo da Options
- * Page ACF (campo `footer`) e renderiza o layout responsivo:
- * - Desktop: newsletter à esquerda + colunas de links à direita (com
- *   divisor vertical entre eles).
- * - Mobile: tudo empilhado.
- *
- * Sub-componentes client são usados apenas para o acordeão das colunas
- * e para o form da newsletter — o resto fica estático/SSR.
+ * Footer global do blog. O conteúdo comercial/legal vem dos menus da Uappi;
+ * a renderização replica a faixa inferior do rodapé da loja.
  */
 export async function Footer() {
   const data = await getFooter();
@@ -45,12 +39,9 @@ export async function Footer() {
 
   return (
     <footer className="bg-[color:var(--color-brand-footer)] text-[color:var(--color-brand-text)]">
-      {/* Linha superior */}
       <div className="border-t border-[color:var(--color-brand-divider)]" />
 
-      {/* Seção 1: newsletter + colunas */}
       <div className="flex flex-col border-b border-[color:var(--color-brand-divider)] lg:flex-row lg:items-stretch">
-        {/* Newsletter */}
         <div className="flex flex-col gap-4 px-[18px] pr-8 py-8 lg:w-[578px] lg:shrink-0 lg:border-r lg:border-[color:var(--color-brand-divider)] lg:p-8">
           {newsletter?.titulo && (
             <p className="font-display text-[16px] font-medium tracking-[0.2em] uppercase">
@@ -80,10 +71,7 @@ export async function Footer() {
               {newsletter.urlPoliticaPrivacidade ? (
                 <>
                   Ao inscrever-se, você concorda com a nossa{" "}
-                  <Link
-                    href={newsletter.urlPoliticaPrivacidade}
-                    className="underline"
-                  >
+                  <Link href={newsletter.urlPoliticaPrivacidade} className="underline">
                     política de privacidade.
                   </Link>
                 </>
@@ -94,7 +82,6 @@ export async function Footer() {
           )}
         </div>
 
-        {/* Colunas de links */}
         {data.colunas.length > 0 && (
           <div className="border-t border-[color:var(--color-brand-divider)] px-3 pr-6 py-3 lg:flex-1 lg:border-t-0 lg:py-3 lg:pl-6 lg:pr-[46px]">
             <FooterAccordion columns={data.colunas} />
@@ -102,112 +89,100 @@ export async function Footer() {
         )}
       </div>
 
-      {/* Seção 2: rodapé central */}
-      <div className="flex flex-col items-center gap-6 px-[18px] pb-5 pt-8 lg:gap-6">
-        <div className="flex flex-col items-center gap-[18px]">
-          {data.redesSociais.length > 0 && (
-            <ul className="flex items-center gap-3">
-              {data.redesSociais.map((social) => {
-                const config = SOCIAL_ICON_BY_NETWORK[social.rede];
-                if (!config) return null;
-                const Icon = config.Icon;
-                return (
-                  <li key={social.rede}>
-                    <a
-                      href={social.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={config.label}
-                      className="flex size-[30px] items-center justify-center rounded-full bg-white text-black"
-                    >
+      <div className="flex flex-col items-center gap-[18px] px-[18px] pb-5 pt-8 lg:gap-3">
+        {data.redesSociais.length > 0 && (
+          <ul className="flex items-center gap-3 lg:mb-[6px]">
+            {data.redesSociais.map((social) => {
+              const config = SOCIAL_ICON_BY_NETWORK[social.rede];
+              if (!config) return null;
+              const Icon = config.Icon;
+              return (
+                <li key={social.rede}>
+                  <a
+                    href={social.url}
+                    target={social.abrirEmNovaAba ? "_blank" : undefined}
+                    rel={social.abrirEmNovaAba ? "noreferrer" : undefined}
+                    aria-label={social.label ?? config.label}
+                    className={
+                      social.icone
+                        ? "block size-[30px] overflow-hidden rounded-full"
+                        : "flex size-[30px] items-center justify-center rounded-full bg-white text-black"
+                    }
+                  >
+                    {social.icone ? (
+                      <Image
+                        src={social.icone}
+                        alt=""
+                        width={30}
+                        height={30}
+                        className="size-[30px] object-contain"
+                      />
+                    ) : (
                       <Icon className="size-4" />
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-
-          <Link
-            href="/"
-            aria-label="Mobility Brasil — Home"
-            className="block"
-          >
-            {/* TEMP: enquanto não há /logo-mobility-black.svg, invertemos o
-                arquivo branco existente (monocromático). Substituir pela
-                versão preta quando o asset for fornecido. */}
-            <Image
-              src="/logo-mobility-white.svg"
-              alt="Mobility Brasil"
-              width={124}
-              height={25}
-              className="invert"
-            />
-          </Link>
-        </div>
-
-        <div className="flex w-full flex-col items-center gap-3">
-          {bottom && bottom.linksLegais.length > 0 && (
-            <ul className="flex items-center divide-x divide-[color:var(--color-brand-gray)]">
-              {bottom.linksLegais.map((link, index) => (
-                <li key={`${link.label}-${index}`} className="px-3 first:pl-0 last:pr-0">
-                  <Link
-                    href={link.url}
-                    className="text-[12px] text-[color:var(--color-brand-text)] underline opacity-70 hover:opacity-100"
-                  >
-                    {link.label}
-                  </Link>
+                    )}
+                  </a>
                 </li>
-              ))}
-            </ul>
-          )}
+              );
+            })}
+          </ul>
+        )}
 
-          {bottom?.copyright && (
-            <p className="text-center text-[12px] text-[color:var(--color-brand-text)] opacity-70">
-              {bottom.copyright}
-            </p>
-          )}
+        <Link href="/" aria-label="Mobility Brasil — Home" className="block">
+          <Image
+            src={bottom?.logoUrl ?? "/logo-mobility-white.svg"}
+            alt={bottom?.logoAlt ?? "Mobility Brasil"}
+            width={124}
+            height={26}
+            className={bottom?.logoUrl ? "h-[26px] w-auto object-contain" : "invert"}
+          />
+        </Link>
 
-          <div className="flex flex-col items-center gap-1 text-[12px] text-[color:var(--color-brand-text)]">
-            {bottom?.textoTecnologia && (
-              <div className="flex items-center gap-2">
-                <span className="opacity-70">{bottom.textoTecnologia}</span>
-                {bottom.urlTecnologia ? (
-                  <a
-                    href={bottom.urlTecnologia}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[10px] underline"
-                  >
-                    Uappi
-                  </a>
-                ) : (
-                  <span className="text-[10px] underline">Uappi</span>
-                )}
-              </div>
-            )}
-            {bottom?.textoDesenvolvido && (
-              <div className="flex items-center gap-1">
-                <span>{bottom.textoDesenvolvido}</span>
-                {/* TEMP: trocar pelo SVG da TEC4U quando o asset estiver no
-                    /public. */}
-                {bottom.urlDesenvolvedor ? (
-                  <a
-                    href={bottom.urlDesenvolvedor}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-display font-bold tracking-wide"
-                  >
-                    TEC4U
-                  </a>
-                ) : (
-                  <span className="font-display font-bold tracking-wide">
-                    TEC4U
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
+        {bottom && bottom.linksLegais.length > 0 && (
+          <ul className="flex items-center divide-x divide-[color:var(--color-brand-gray)]">
+            {bottom.linksLegais.map((link, index) => (
+              <li key={link.label + "-" + index} className="px-3 first:pl-0 last:pr-0">
+                <Link
+                  href={link.url}
+                  className="text-[12px] text-[color:var(--color-brand-text)] underline opacity-70 hover:opacity-100"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {bottom?.copyright && (
+          <p className="text-center text-[12px] text-[color:var(--color-brand-text)] opacity-70">
+            {bottom.copyright}
+          </p>
+        )}
+
+        <div className="flex flex-col items-center gap-1 text-[12px] text-[color:var(--color-brand-text)]">
+          {bottom?.textoTecnologia && (
+            <div className="flex items-center gap-2">
+              <span className="opacity-70">{bottom.textoTecnologia}</span>
+              {bottom.urlTecnologia ? (
+                <a href={bottom.urlTecnologia} target="_blank" rel="noreferrer" className="text-[10px] underline">
+                  Uappi
+                </a>
+              ) : (
+                <span className="text-[10px] underline">Uappi</span>
+              )}
+            </div>
+          )}
+          {bottom?.textoDesenvolvido && (
+            <div className="flex items-center gap-1">
+              <span>{bottom.textoDesenvolvido}</span>
+              {bottom.urlDesenvolvedor ? (
+                <a href={bottom.urlDesenvolvedor} target="_blank" rel="noreferrer" className="font-display font-bold tracking-wide">
+                  TEC4U
+                </a>
+              ) : (
+                <span className="font-display font-bold tracking-wide">TEC4U</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </footer>

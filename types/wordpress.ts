@@ -1,11 +1,11 @@
 /**
- * Types que espelham os dados retornados pelas queries em
- * `lib/graphql/queries/*`. Quando adicionar um campo numa query, atualize
- * o type correspondente aqui — não use `any`.
+ * Tipos que espelham os dados retornados pelas queries em
+ * lib/graphql/queries/*. Quando adicionar um campo numa query, atualize
+ * o type correspondente aqui — não use any.
  *
  * Convenção:
- * - Sufixo `Response`  → forma do objeto `data` retornado pela query
- * - Sufixo `Variables` → forma das variáveis aceitas pela query
+ * - Sufixo Response indica forma do objeto data retornado pela query
+ * - Sufixo Variables indica forma das variáveis aceitas pela query
  */
 
 // ---------- Yoast SEO ----------------------------------------------------
@@ -85,10 +85,6 @@ export interface Author {
     avatar: {
       url: string | null;
     } | null;
-    /**
-     * Campos ACF aplicados ao próprio usuário. Pode ser `null` se não
-     * houver field group para User no WP.
-     */
     authorAcf?: AuthorACFFields | null;
   } | null;
 }
@@ -126,12 +122,6 @@ export interface PostTags {
 
 // ---------- ACF do Post --------------------------------------------------
 
-/**
- * Espelha o Field Group ACF "Post Settings" aplicado ao tipo `post`.
- * O `graphql_field_name` do grupo é `postSettings`. Os campos individuais
- * são expostos em camelCase a partir do nome snake_case do ACF
- * (`post_highlight` → `postHighlight`, `post_cta_url` → `postCtaUrl`, etc).
- */
 export interface ACFPostSettings {
   postHighlight: boolean | null;
   postThemeColor: string | null;
@@ -186,7 +176,6 @@ export interface GetPostsVariables {
   after?: string | null;
   categorySlug?: string | null;
   search?: string | null;
-  /** Quando `true`, retorna apenas posts com ACF `postHighlight = true`. */
   highlightedOnly?: boolean;
 }
 
@@ -231,6 +220,9 @@ export type FooterSocialNetwork =
 export interface FooterSocial {
   rede: FooterSocialNetwork;
   url: string;
+  label?: string;
+  icone?: string | null;
+  abrirEmNovaAba?: boolean;
 }
 
 export interface FooterLink {
@@ -266,6 +258,8 @@ export interface FooterBottom {
   urlTecnologia: string | null;
   textoDesenvolvido: string | null;
   urlDesenvolvedor: string | null;
+  logoUrl?: string | null;
+  logoAlt?: string | null;
 }
 
 export interface FooterData {
