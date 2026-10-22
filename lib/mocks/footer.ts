@@ -50,24 +50,75 @@ export const MOCK_FOOTER: FooterData = {
     },
   ],
   redesSociais: [
-    { rede: "instagram", url: "https://instagram.com/mobilitybrasil" },
-    { rede: "facebook", url: "https://facebook.com/mobilitybrasil" },
-    { rede: "tiktok", url: "https://tiktok.com/@mobilitybrasil" },
-    { rede: "youtube", url: "https://youtube.com/@mobilitybrasil" },
-    { rede: "linkedin", url: "https://linkedin.com/company/mobilitybrasil" },
-    { rede: "whatsapp", url: "https://wa.me/5500000000000" },
+    {
+      rede: "instagram",
+      label: "Instagram",
+      url: "https://www.instagram.com/mobilitybrasil/",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/c28ca5ddd64641a3324feca8c1a3226d.webp",
+      abrirEmNovaAba: true,
+    },
+    {
+      rede: "facebook",
+      label: "Facebook",
+      url: "https://www.facebook.com/mobility.cadeirasderodas",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/b7640f033081ed13a30916a90e3bc93b.webp",
+      abrirEmNovaAba: true,
+    },
+    {
+      rede: "youtube",
+      label: "YouTube",
+      url: "https://youtube.com.br/channel/UC9P58Kq_PWEoZSRAkBN3ZqQ",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/79520d416e50023b423eaa5ea4e825d3.webp",
+      abrirEmNovaAba: true,
+    },
+    {
+      rede: "tiktok",
+      label: "TikTok",
+      url: "https://www.tiktok.com/@mobilitybrasil",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/8a6b3b8a0e3f9b4c840f88912f50839e.webp",
+      abrirEmNovaAba: true,
+    },
+    {
+      rede: "linkedin",
+      label: "LinkedIn",
+      url: "https://www.linkedin.com/company/mobility-brasil/",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/6381b431db379c53c7920d6dea25bf83.webp",
+      abrirEmNovaAba: true,
+    },
+    {
+      rede: "whatsapp",
+      label: "WhatsApp",
+      url: "https://api.whatsapp.com/send/?phone=5511999096060",
+      icone: "https://www.mobilitybrasil.com.br/upload/menu/icons-footer/dee1517613e9c5417aad021db4c4d71b.webp",
+      abrirEmNovaAba: true,
+    },
   ],
   bottom: {
     copyright:
-      "© 2025, Mobility Brasil Importação e Comércio de Cadeiras de Rodas Eireli. Todos os direitos reservados.",
+      "© " +
+      new Date().getFullYear() +
+      ", Mobility Brasil Importação e Comércio de Cadeiras de Rodas Ltda. Todos os direitos reservados.",
     linksLegais: [
-      { label: "Endereço", url: "/endereco" },
-      { label: "Atendimento", url: "/atendimento" },
-      { label: "CNPJ", url: "/cnpj" },
+      { label: "Endereço", url: "https://maps.app.goo.gl/S2HuFb5WWZtXhkP79" },
+      {
+        label: "Atendimento",
+        url: "https://api.whatsapp.com/send/?phone=5511999096060&text=Ol%C3%A1%21+Estava+no+site+e+gostaria+de+mais+informa%C3%A7%C3%B5es.&type=phone_number&app_absent=0",
+      },
+      {
+        label: "CNPJ: 13.827.655/0001-80",
+        url: "https://www.mobilitybrasil.com.br/pagina/sobre-nos",
+      },
+      {
+        label: "Copyright",
+        url: "https://www.mobilitybrasil.com.br/pagina/politica-de-privacidade",
+      },
     ],
     textoTecnologia: "Tecnologia de e-commerce",
     urlTecnologia: "https://uappi.com.br",
     textoDesenvolvido: "Desenvolvido por",
     urlDesenvolvedor: "https://tec4udigital.com",
+    logoUrl:
+      "https://www.mobilitybrasil.com.br/upload/menu/copyright-footer/ba6a9e038fd138c108493da51b6b3358.webp",
+    logoAlt: "Mobility Brasil",
   },
 };
