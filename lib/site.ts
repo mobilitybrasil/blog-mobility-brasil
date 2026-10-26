@@ -7,7 +7,7 @@
 export const STORE_URL =
   process.env.NEXT_PUBLIC_STORE_URL ?? "https://www.mobilitybrasil.com.br";
 
-export const HELP_URL = `${STORE_URL}/atendimento`;
-export const ACCOUNT_URL = `${STORE_URL}/login`;
+export const HELP_URL = `${STORE_URL}/pagina/central-de-ajuda`;
+export const ACCOUNT_URL = `${STORE_URL}/checkout/acesso`;
 export const ABOUT_URL =
   process.env.NEXT_PUBLIC_ABOUT_URL ?? `${STORE_URL}/sobre-nos`;
