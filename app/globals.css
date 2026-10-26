@@ -356,3 +356,70 @@ html.acessibilidade-audio #barraAcessibilidade * {
 .post-content .wp-block-embed.wp-has-aspect-ratio .wp-block-embed__wrapper > iframe {
   position: absolute; inset: 0; width: 100%; height: 100%;
 }
+
+
+/* Imagens do artigo: preservar o tamanho original e a proporcao no mobile. */
+.post-content img,
+.post-content figure img {
+  width: auto;
+  max-width: 100%;
+}
+
+/* Galerias do Gutenberg sem o CSS do tema WordPress no frontend Next.js. */
+.post-content .wp-block-gallery.has-nested-images {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+  width: 100%;
+  margin-block: 38px;
+}
+
+.post-content .wp-block-gallery.has-nested-images.columns-1 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.post-content .wp-block-gallery.has-nested-images.columns-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.post-content .wp-block-gallery.has-nested-images > figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  min-width: 0;
+  max-width: none !important;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f7f7f7;
+}
+
+.post-content .wp-block-gallery.has-nested-images > figure > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.post-content .wp-block-gallery.has-nested-images > figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+@media (max-width: 680px) {
+  .post-content .wp-block-gallery.has-nested-images {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .post-content .wp-block-gallery.has-nested-images {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
