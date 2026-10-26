@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { PostCard } from "@/components/blog/PostCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getCategories } from "@/lib/graphql/queries/categories";
+import { getPostBySlug } from "@/lib/graphql/queries/post";
 import { getPosts } from "@/lib/graphql/queries/posts";
 import { buildCategoryJsonLd } from "@/lib/structuredData";
 import { SITE_URL } from "@/lib/wordpress";
@@ -65,7 +66,26 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
   const node = await findCategoryBySlug(category);
 
-  if (!node) notFound();
+  if (!node) {
+    if (category === "politica-de-privacidade") {
+      permanentRedirect(
+        "https://www.mobilitybrasil.com.br/pagina/politica-de-privacidade/",
+      );
+    }
+
+    // WordPress previously published posts directly at /{slug}. Resolve only
+    // real CMS posts so unknown paths remain genuine 404s.
+    const legacyPost = await getPostBySlug(category, {
+      fallbackToMocks: false,
+    });
+    const canonicalCategory = legacyPost?.categories?.nodes[0]?.slug;
+
+    if (legacyPost && canonicalCategory) {
+      permanentRedirect(`/${canonicalCategory}/${legacyPost.slug}`);
+    }
+
+    notFound();
+  }
 
   const [categories, posts] = await Promise.all([
     getCategories(),

@@ -88,7 +88,10 @@ interface BasicPostResponse {
   post: Omit<Post, "postSettings" | "seo"> | null;
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
+export async function getPostBySlug(
+  slug: string,
+  options: { fallbackToMocks?: boolean } = {},
+): Promise<Post | null> {
   try {
     const data = await fetchGraphQL<
       GetPostBySlugResponse,
@@ -131,6 +134,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       error instanceof Error ? error.message : error,
     );
   }
+
+  if (options.fallbackToMocks === false) return null;
 
   const mock = MOCK_POSTS.find((p) => p.slug === slug);
   if (!mock) return null;

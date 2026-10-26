@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PostBottomCTA } from "@/components/blog/PostBottomCTA";
 import { PostCategoryBreadcrumb } from "@/components/blog/PostCategoryBreadcrumb";
 import { PostCommentForm } from "@/components/blog/PostCommentForm";
@@ -60,7 +60,8 @@ export async function generateMetadata({
   // `seo.canonical`/`seo.opengraphUrl` do Yoast apontam para o domínio e a
   // estrutura de URL do WordPress (`/slug/`), não para o blog público
   // (`/categoria/slug`).
-  const canonicalUrl = `${SITE_URL}/${category}/${slug}`;
+  const canonicalCategory = post.categories?.nodes[0]?.slug ?? category;
+  const canonicalUrl = `${SITE_URL}/${canonicalCategory}/${slug}`;
 
   return {
     title:
@@ -124,10 +125,17 @@ export default async function PostPage({ params }: PostPageProps) {
 
   if (!post) notFound();
 
-  // Se a categoria da URL não bater com a do post, redireciona para a URL
-  // canônica via `notFound` — evita conteúdo duplicado nas SERPs.
+  // Slugs de categoria antigos continuam chegando de links e indexação do WP.
+  // Só redireciona quando o CMS confirma o artigo e sua categoria canônica.
   const postPrimaryCategory = post.categories?.nodes[0]?.slug ?? null;
   if (postPrimaryCategory && postPrimaryCategory !== category) {
+    const confirmedPost = await getPostBySlug(slug, { fallbackToMocks: false });
+    const confirmedCategory = confirmedPost?.categories?.nodes[0]?.slug;
+
+    if (confirmedPost && confirmedCategory) {
+      permanentRedirect(`/${confirmedCategory}/${confirmedPost.slug}`);
+    }
+
     notFound();
   }
 
