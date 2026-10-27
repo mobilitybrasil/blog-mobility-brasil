@@ -43,6 +43,12 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
   if (!post) return { title: "Post não encontrado" };
 
+  // WPGraphQL/Yoast can echo the site's global "discourage search engines"
+  // setting into every post. The public WordPress query only returns published
+  // posts, so the temporary-host protection must not make the official article
+  // URL noindex. Keep local mock content out of search results.
+  const isMockPost = post.id.startsWith("post-mock-");
+
   const seo = post.seo;
   const fallbackTitle = stripHtml(post.title);
   const fallbackDescription =
@@ -70,10 +76,7 @@ export async function generateMetadata({
       fallbackDescription,
     alternates: { canonical: canonicalUrl },
     keywords: seo?.metaKeywords ?? undefined,
-    robots: {
-      index: seo?.metaRobotsNoindex !== "noindex",
-      follow: seo?.metaRobotsNofollow !== "nofollow",
-    },
+    robots: { index: !isMockPost, follow: !isMockPost },
     openGraph: {
       title:
         stripWrongSiteName(seo?.opengraphTitle, WORDPRESS_HOSTNAME) ||
