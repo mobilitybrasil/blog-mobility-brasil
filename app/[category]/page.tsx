@@ -82,7 +82,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
     // WordPress previously published posts directly at /{slug}. Resolve only
     // real CMS posts so unknown paths remain genuine 404s.
-    const legacyPost = await getPostBySlug(category.replace(/[\u200B-\u200F\uFEFF\uFFFC]/g, ""), {
+    const legacyPost = await getPostBySlug(category === "79" ? "guia-manutencao-cadeira-rodas-motorizada" : category.replace(/(?:[\u200B-\u200F\uFEFF\uFFFC]|%ef%bf%bc)/gi, ""), {
       fallbackToMocks: false,
     });
     const canonicalCategory = legacyPost?.categories?.nodes[0]?.slug;
