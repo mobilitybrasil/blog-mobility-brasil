@@ -54,7 +54,7 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
               </Link>
             </h3>
             {excerpt && (
-              <p className="line-clamp-2 text-[14px] leading-[24px] text-[#848688]">
+              <p className="line-clamp-2 text-[14px] leading-[24px] text-[#6B6D70]">
                 {excerpt}
               </p>
             )}
@@ -79,7 +79,7 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
             </span>
             <time
               dateTime={post.date}
-              className="text-[10px] leading-none text-[#848688]"
+              className="text-[10px] leading-none text-[#6B6D70]"
             >
               {formatDate(post.date)}
             </time>
