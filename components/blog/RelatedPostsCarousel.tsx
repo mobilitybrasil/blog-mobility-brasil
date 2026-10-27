@@ -215,7 +215,7 @@ function RelatedPostCard({ post }: { post: PostListItem }) {
             <ArrowUpRightIcon className="size-2 shrink-0 text-[#101828]" />
           </div>
           {excerpt && (
-            <p className="line-clamp-2 text-[14px] leading-[24px] text-[#848688]">
+            <p className="line-clamp-2 text-[14px] leading-[24px] text-[#6B6D70]">
               {excerpt}
             </p>
           )}
@@ -239,7 +239,7 @@ function RelatedPostCard({ post }: { post: PostListItem }) {
             </span>
             <time
               dateTime={post.date}
-              className="text-[10px] leading-none text-[#848688]"
+              className="text-[10px] leading-none text-[#6B6D70]"
             >
               {formatDate(post.date)}
             </time>
