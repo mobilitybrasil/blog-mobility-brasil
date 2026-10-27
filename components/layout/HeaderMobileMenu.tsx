@@ -117,6 +117,15 @@ export function HeaderMobileMenu({ categories }: HeaderMobileMenuProps) {
                     Buscar artigos
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/categorias"
+                    onClick={close}
+                    className="block px-5 py-3 text-base font-medium text-[color:var(--color-brand-black)]"
+                  >
+                    Todas as categorias
+                  </Link>
+                </li>
                 {categories.map((category) => {
                   const children = category.children?.nodes ?? [];
                   const hasChildren = children.length > 0;

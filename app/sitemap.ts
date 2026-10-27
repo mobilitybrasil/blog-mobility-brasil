@@ -42,7 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: latestRelevantDate(post.date, post.modified),
   }));
 
-  const entries = [{ url: SITE_URL }, ...categoryEntries, ...postEntries];
+  const entries = [
+    { url: SITE_URL },
+    { url: `${SITE_URL}/categorias` },
+    ...categoryEntries,
+    ...postEntries,
+  ];
   const uniqueEntries = new Map(entries.map((entry) => [entry.url, entry]));
 
   return [...uniqueEntries.values()];

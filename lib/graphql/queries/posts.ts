@@ -142,6 +142,66 @@ export interface SearchPostsResult {
   error: boolean;
 }
 
+export interface PostsPageResult {
+  posts: PostListItem[];
+  pageInfo: PageInfo | null;
+}
+
+/** Página de arquivo com cursor, para manter todos os artigos acessíveis por links HTML. */
+export async function getPostsPage(
+  variables: Pick<GetPostsVariables, "first" | "after" | "categorySlug">,
+): Promise<PostsPageResult> {
+  const queryVariables: GetPostsVariables = {
+    first: variables.first ?? 12,
+    after: variables.after ?? null,
+    categorySlug: variables.categorySlug ?? null,
+  };
+  const tags = [
+    cacheTags.posts,
+    ...(queryVariables.categorySlug
+      ? [cacheTags.category(queryVariables.categorySlug)]
+      : []),
+  ];
+
+  try {
+    const data = await fetchGraphQL<GetPostsResponse, GetPostsVariables>(
+      POSTS_QUERY,
+      queryVariables,
+      { tags, operationName: "GetPosts" },
+    );
+    if (data.posts) {
+      return { posts: data.posts.nodes, pageInfo: data.posts.pageInfo };
+    }
+  } catch (error) {
+    console.warn(
+      "[wordpress] página de arquivo com ACF/Yoast falhou, tentando query básica.",
+      error instanceof Error ? error.message : error,
+    );
+  }
+
+  try {
+    const data = await fetchGraphQL<BasicPostsResponse, GetPostsVariables>(
+      POSTS_BASIC_QUERY,
+      queryVariables,
+      { tags, operationName: "GetPostsBasic" },
+    );
+    return {
+      posts: (data.posts?.nodes ?? []).map((post) => ({
+        ...post,
+        postSettings: null,
+        seo: null,
+      })),
+      pageInfo: data.posts?.pageInfo ?? null,
+    };
+  } catch (error) {
+    console.error(
+      "[wordpress] página de arquivo básica também falhou.",
+      error instanceof Error ? error.message : error,
+    );
+    return { posts: [], pageInfo: null };
+  }
+}
+
 /**
  * Busca artigos no WordPress sem recorrer a conteúdo de demonstração. A busca
  * é dinâmica para evitar armazenar em cache cada combinação arbitrária de

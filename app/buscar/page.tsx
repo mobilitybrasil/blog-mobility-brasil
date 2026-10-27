@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Buscar artigos",
   description: "Encontre artigos, dicas e informações no Blog Mobility Brasil.",
   robots: { index: false, follow: true },
+  alternates: { canonical: "/buscar" },
 };
 
 interface SearchPageProps {

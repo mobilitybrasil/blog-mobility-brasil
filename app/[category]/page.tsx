@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { PostCard } from "@/components/blog/PostCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getCategories } from "@/lib/graphql/queries/categories";
 import { getPostBySlug } from "@/lib/graphql/queries/post";
-import { getPosts } from "@/lib/graphql/queries/posts";
+import { getPostsPage } from "@/lib/graphql/queries/posts";
 import { buildCategoryJsonLd } from "@/lib/structuredData";
 import { SITE_URL } from "@/lib/wordpress";
 import type { Category, CategoryNode } from "@/types/wordpress";
@@ -15,6 +16,11 @@ export const dynamicParams = true;
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
+  searchParams: Promise<{ after?: string | string[] }>;
+}
+
+function firstValue(value: string | string[] | undefined): string | null {
+  return Array.isArray(value) ? value[0] ?? null : value ?? null;
 }
 
 function flattenCategories(categories: Category[]): CategoryNode[] {
@@ -62,8 +68,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = await params;
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
+  const [{ category }, query] = await Promise.all([params, searchParams]);
+  const after = firstValue(query.after)?.slice(0, 500) || null;
   const node = await findCategoryBySlug(category);
 
   if (!node) {
@@ -87,10 +94,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const [categories, posts] = await Promise.all([
+  const [categories, result] = await Promise.all([
     getCategories(),
-    getPosts({ first: 12, categorySlug: node.slug }),
+    getPostsPage({ first: 12, after, categorySlug: node.slug }),
   ]);
+  const { posts } = result;
+  const nextPageHref = result.pageInfo?.hasNextPage && result.pageInfo.endCursor
+    ? `/${node.slug}?after=${encodeURIComponent(result.pageInfo.endCursor)}`
+    : null;
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-12">
@@ -135,6 +146,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 priority={index < 3}
               />
             ))}
+          </div>
+        )}
+        {nextPageHref && (
+          <div className="flex justify-center pt-4">
+            <Link
+              href={nextPageHref}
+              rel="next"
+              className="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-900 transition-colors hover:border-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            >
+              Ver mais artigos
+            </Link>
           </div>
         )}
       </section>

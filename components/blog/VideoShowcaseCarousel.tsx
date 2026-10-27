@@ -125,16 +125,15 @@ export function VideoShowcaseCarousel({ items }: VideoShowcaseCarouselProps) {
           {tripled.map((item, idx) => {
             const isActive = idx === activeIdx;
             const dist = Math.abs(idx - activeIdx);
-            // Vizinhos imediatos baixam o vídeo inteiro (para troca rápida);
-            // os demais só metadata — o suficiente para mostrar o 1º frame
-            // sem custo de banda relevante.
-            const eagerLoad = dist <= 1;
+            // Mantém apenas o vídeo ativo e seus vizinhos no DOM com origem.
+            // O carrossel triplicado não deve iniciar 21 requisições de mídia.
+            const shouldLoad = dist <= 1;
             return (
               <VideoCard
                 key={`v-${idx}`}
                 item={item}
                 isActive={isActive}
-                eagerLoad={eagerLoad}
+                shouldLoad={shouldLoad}
                 muted={muted}
                 onToggleMute={() => setMuted((m) => !m)}
                 onFocusClick={() => setActiveIdx(idx)}
@@ -192,7 +191,7 @@ export function VideoShowcaseCarousel({ items }: VideoShowcaseCarouselProps) {
 interface VideoCardProps {
   item: VideoShowcaseItem;
   isActive: boolean;
-  eagerLoad: boolean;
+  shouldLoad: boolean;
   muted: boolean;
   onToggleMute: () => void;
   onFocusClick: () => void;
@@ -202,7 +201,7 @@ interface VideoCardProps {
 function VideoCard({
   item,
   isActive,
-  eagerLoad,
+  shouldLoad,
   muted,
   onToggleMute,
   onFocusClick,
@@ -210,8 +209,8 @@ function VideoCard({
 }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Controle de play/pause. Só o ativo dá play. Os demais mantêm o
-  // primeiro frame estático (metadata carregada, paused).
+  // Só o ativo dá play. Os vizinhos mantêm metadata para troca rápida;
+  // cards distantes liberam o recurso de mídia.
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -226,12 +225,16 @@ function VideoCard({
       return;
     }
     v.pause();
+    if (!shouldLoad) {
+      v.load();
+      return;
+    }
     try {
       v.currentTime = 0;
     } catch {
       /* alguns formatos lançam quando seek antes do metadata; ignorar */
     }
-  }, [isActive, muted]);
+  }, [isActive, muted, shouldLoad]);
 
   // Garante que o `muted` HTML se mantém em sync com o estado do
   // carrossel mesmo quando o card já está renderizado.
@@ -288,13 +291,13 @@ function VideoCard({
     >
       <video
         ref={videoRef}
-        src={item.src}
+        src={shouldLoad ? item.src : undefined}
         poster={item.poster ?? undefined}
         className="size-full object-cover"
         playsInline
         muted={muted}
         loop
-        preload={isActive ? "auto" : eagerLoad ? "auto" : "metadata"}
+        preload={isActive ? "auto" : shouldLoad ? "metadata" : "none"}
         onLoadedMetadata={(event) => {
           // Força o 1º frame a renderizar nos cards inativos — sem isso
           // Safari/Firefox podem ficar com fundo preto até dar play.
