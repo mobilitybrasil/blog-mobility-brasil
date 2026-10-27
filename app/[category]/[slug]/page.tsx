@@ -29,6 +29,14 @@ interface PostPageProps {
   params: Promise<{ category: string; slug: string }>;
 }
 
+// Redirect only when the legacy WordPress record and its current equivalent
+// are both confirmed in the CMS archives. This published post was renamed to
+// `__trashed` in the legacy WordPress site before it was migrated.
+const legacyPostRedirects: Record<string, string> = {
+  "cadeira-de-rodas-manual/__trashed":
+    "/cadeira-de-rodas-manual/encosto-e-assento-digitalizados-como-funciona-a-personalizacao-em-3d",
+};
+
 export async function generateStaticParams(): Promise<
   Array<{ category: string; slug: string }>
 > {
@@ -115,6 +123,9 @@ export async function generateMetadata({
 
 export default async function PostPage({ params }: PostPageProps) {
   const { category, slug } = await params;
+
+  const legacyDestination = legacyPostRedirects[`${category}/${slug}`];
+  if (legacyDestination) permanentRedirect(legacyDestination);
 
   const [post, recentPosts, trendingPosts, relatedPosts] = await Promise.all([
     getPostBySlug(slug),
