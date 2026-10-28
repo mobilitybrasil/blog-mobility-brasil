@@ -1,8 +1,5 @@
 import { BlogHero } from "@/components/blog/BlogHero";
-import {
-  CategoryShowcase,
-  COMPONENTS_HOME_URI,
-} from "@/components/blog/CategoryShowcase";
+import { CategoryDirectory } from "@/components/blog/CategoryDirectory";
 import { LatestNews } from "@/components/blog/LatestNews";
 import { RecentPosts } from "@/components/blog/RecentPosts";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -11,6 +8,7 @@ import { getCategories } from "@/lib/graphql/queries/categories";
 import { getPageByUri } from "@/lib/graphql/queries/pages";
 import { getPosts } from "@/lib/graphql/queries/posts";
 import { buildBlogHomeJsonLd } from "@/lib/structuredData";
+import { COMPONENTS_HOME_URI } from "@/components/blog/CategoryShowcase";
 
 export const revalidate = 3600;
 
@@ -30,11 +28,11 @@ export default async function HomePage() {
 
       {latestPosts.length > 0 && <LatestNews posts={latestPosts} />}
 
-      <CategoryShowcase page={showcasePage} />
+      <CategoryDirectory categories={categories} />
 
       <VideoShowcase page={showcasePage} />
 
-      <RecentPosts posts={posts} />
+      <RecentPosts posts={posts.slice(latestPosts.length)} />
     </div>
   );
 }

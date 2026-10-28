@@ -33,7 +33,7 @@ export function HeaderDesktopNav({ categories }: HeaderDesktopNavProps) {
   }, []);
 
   return (
-    <ul className="flex items-center gap-8">
+    <ul className="flex items-center gap-4 xl:gap-8">
       {categories.map((category) => {
         const children = category.children?.nodes ?? [];
         const hasChildren = children.length > 0;
@@ -90,6 +90,14 @@ export function HeaderDesktopNav({ categories }: HeaderDesktopNavProps) {
           </li>
         );
       })}
+      <li>
+        <Link
+          href="/categorias"
+          className="font-display flex items-center py-2 text-[12px] font-semibold uppercase italic tracking-[0.05em] text-white underline-offset-4 transition-opacity hover:opacity-80 hover:underline"
+        >
+          Ver todas
+        </Link>
+      </li>
     </ul>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PostBottomCTA } from "@/components/blog/PostBottomCTA";
 import { PostCategoryBreadcrumb } from "@/components/blog/PostCategoryBreadcrumb";
 import { PostCommentForm } from "@/components/blog/PostCommentForm";
@@ -28,6 +28,14 @@ export const dynamicParams = true;
 interface PostPageProps {
   params: Promise<{ category: string; slug: string }>;
 }
+
+// Redirect only when the legacy WordPress record and its current equivalent
+// are both confirmed in the CMS archives. This published post was renamed to
+// `__trashed` in the legacy WordPress site before it was migrated.
+const legacyPostRedirects: Record<string, string> = {
+  "cadeira-de-rodas-manual/__trashed":
+    "/cadeira-de-rodas-manual/encosto-e-assento-digitalizados-como-funciona-a-personalizacao-em-3d",
+};
 
 export async function generateStaticParams(): Promise<
   Array<{ category: string; slug: string }>
@@ -66,7 +74,8 @@ export async function generateMetadata({
   // `seo.canonical`/`seo.opengraphUrl` do Yoast apontam para o domínio e a
   // estrutura de URL do WordPress (`/slug/`), não para o blog público
   // (`/categoria/slug`).
-  const canonicalUrl = `${SITE_URL}/${category}/${slug}`;
+  const canonicalCategory = post.categories?.nodes[0]?.slug ?? category;
+  const canonicalUrl = `${SITE_URL}/${canonicalCategory}/${slug}`;
 
   return {
     title:
@@ -118,6 +127,9 @@ export async function generateMetadata({
 export default async function PostPage({ params }: PostPageProps) {
   const { category, slug } = await params;
 
+  const legacyDestination = legacyPostRedirects[`${category}/${slug}`];
+  if (legacyDestination) permanentRedirect(legacyDestination);
+
   const [post, recentPosts, trendingPosts, relatedPosts] = await Promise.all([
     getPostBySlug(slug),
     getRecentPosts({ excludeSlug: slug, first: 5 }),
@@ -127,10 +139,17 @@ export default async function PostPage({ params }: PostPageProps) {
 
   if (!post) notFound();
 
-  // Se a categoria da URL não bater com a do post, redireciona para a URL
-  // canônica via `notFound` — evita conteúdo duplicado nas SERPs.
+  // Slugs de categoria antigos continuam chegando de links e indexação do WP.
+  // Só redireciona quando o CMS confirma o artigo e sua categoria canônica.
   const postPrimaryCategory = post.categories?.nodes[0]?.slug ?? null;
   if (postPrimaryCategory && postPrimaryCategory !== category) {
+    const confirmedPost = await getPostBySlug(slug, { fallbackToMocks: false });
+    const confirmedCategory = confirmedPost?.categories?.nodes[0]?.slug;
+
+    if (confirmedPost && confirmedCategory) {
+      permanentRedirect(`/${confirmedCategory}/${confirmedPost.slug}`);
+    }
+
     notFound();
   }
 

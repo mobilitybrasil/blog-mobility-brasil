@@ -35,10 +35,16 @@ export async function GET(
     /^\d{4}$/.test(year) && /^\d{2}$/.test(month) && /^\d{2}$/.test(day);
   const cleanSlug = postslug.replace(/[​-‏﻿￼]/g, "");
 
-  const post = isValidDate && cleanSlug ? await getPostBySlug(cleanSlug) : null;
+  const post =
+    isValidDate && cleanSlug
+      ? await getPostBySlug(cleanSlug, { fallbackToMocks: false })
+      : null;
   const postCategory = post?.categories?.nodes[0]?.slug;
 
-  const destination = post && postCategory ? `/${postCategory}/${post.slug}` : "/";
+  if (!post || !postCategory) return new Response(null, { status: 404 });
 
-  return NextResponse.redirect(new URL(destination, SITE_URL), 308);
+  return NextResponse.redirect(
+    new URL(`/${postCategory}/${post.slug}`, SITE_URL),
+    308,
+  );
 }

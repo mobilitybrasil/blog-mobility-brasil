@@ -53,7 +53,7 @@ export function BlogHeroCategoryMenu({ categories }: BlogHeroCategoryMenuProps) 
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-40 mt-1 max-h-80 w-[220px] overflow-y-auto rounded-[4px] border-[0.5px] border-[rgba(132,134,136,0.3)] bg-white py-2 shadow-lg"
+          className="absolute right-0 top-full z-40 mt-1 max-h-[min(70vh,32rem)] w-[min(21rem,calc(100vw-2rem))] overflow-y-auto rounded-[4px] border-[0.5px] border-[rgba(132,134,136,0.3)] bg-white py-2 shadow-lg"
         >
           <Link
             href="/"
@@ -63,16 +63,46 @@ export function BlogHeroCategoryMenu({ categories }: BlogHeroCategoryMenuProps) 
           >
             Todas
           </Link>
+          <Link
+            href="/categorias"
+            role="menuitem"
+            onClick={() => setIsOpen(false)}
+            className="block border-b border-neutral-100 px-4 py-2 text-sm font-semibold text-[#373435] hover:bg-neutral-100"
+          >
+            Ver todas as categorias
+          </Link>
           {categories.map((category) => (
-            <Link
+            <div
               key={category.databaseId}
-              href={`/${category.slug}`}
-              role="menuitem"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-2 text-sm text-[#373435] hover:bg-neutral-100"
+              role="group"
+              aria-label={category.name}
+              className="border-b border-neutral-100 px-4 py-3 last:border-b-0"
             >
-              {category.name}
-            </Link>
+              <Link
+                href={`/${category.slug}`}
+                role="menuitem"
+                onClick={() => setIsOpen(false)}
+                className="block text-sm font-semibold text-[#373435] hover:underline"
+              >
+                {category.name}
+              </Link>
+              {(category.children?.nodes ?? []).length > 0 && (
+                <ul className="mt-2 grid gap-x-3 gap-y-1.5 pl-3 sm:grid-cols-2">
+                  {category.children?.nodes.map((child) => (
+                    <li key={child.databaseId}>
+                      <Link
+                        href={`/${child.slug}`}
+                        role="menuitem"
+                        onClick={() => setIsOpen(false)}
+                        className="block py-1 text-xs leading-5 text-neutral-600 hover:text-black hover:underline"
+                      >
+                        {child.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           ))}
         </div>
       )}
