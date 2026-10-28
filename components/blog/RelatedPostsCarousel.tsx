@@ -190,7 +190,7 @@ function RelatedPostCard({ post }: { post: PostListItem }) {
           {image?.sourceUrl && (
             <Image
               src={image.sourceUrl}
-              alt={image.altText ?? post.title}
+              alt={image.altText?.trim() || post.title}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover"
