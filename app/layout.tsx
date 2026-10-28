@@ -71,10 +71,16 @@ export default function RootLayout({
       className={`${lato.variable} ${helveticaNeue.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-neutral-50 text-neutral-900">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[10000] focus:rounded focus:bg-white focus:px-4 focus:py-3 focus:text-black focus:outline focus:outline-2 focus:outline-black"
+        >
+          Pular para o conteúdo
+        </a>
         <Header />
         <AccessibilityToolbar />
 
-        <main className="flex-1">{children}</main>
+        <main id="main-content" tabIndex={-1} className="flex-1">{children}</main>
 
         <Footer />
       </body>

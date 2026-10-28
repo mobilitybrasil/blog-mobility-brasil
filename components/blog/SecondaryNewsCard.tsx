@@ -33,7 +33,7 @@ export function SecondaryNewsCard({ post }: SecondaryNewsCardProps) {
           {image?.sourceUrl && (
             <Image
               src={image.sourceUrl}
-              alt={image.altText ?? post.title}
+              alt={image.altText?.trim() || post.title}
               fill
               sizes="(min-width: 1024px) 30vw, 100vw"
               className="object-cover"

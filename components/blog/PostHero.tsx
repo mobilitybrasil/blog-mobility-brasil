@@ -104,7 +104,7 @@ export function PostHero({
           <div className="relative h-[230px] w-full overflow-hidden rounded-lg sm:h-[412px]">
             <Image
               src={featuredImage.sourceUrl}
-              alt={featuredImage.altText ?? title}
+              alt={featuredImage.altText?.trim() || title}
               fill
               priority
               sizes="(min-width: 1024px) calc(100vw - 108px), 100vw"

@@ -31,12 +31,13 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
     <article className="flex flex-col gap-5">
       <Link
         href={href}
+        aria-label={post.title}
         className="relative block aspect-[870/366] overflow-hidden rounded-[8px] bg-neutral-100"
       >
         {image?.sourceUrl && (
           <Image
             src={image.sourceUrl}
-            alt={image.altText ?? post.title}
+            alt={image.altText?.trim() || post.title}
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
