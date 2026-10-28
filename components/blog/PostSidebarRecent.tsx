@@ -162,7 +162,7 @@ function SidebarRecentCard({ post }: { post: PostListItem }) {
           {image?.sourceUrl && (
             <Image
               src={image.sourceUrl}
-              alt={image.altText ?? post.title}
+              alt={image.altText?.trim() || post.title}
               fill
               sizes="378px"
               className="object-cover"
