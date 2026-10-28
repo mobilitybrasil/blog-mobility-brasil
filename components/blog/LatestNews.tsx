@@ -31,6 +31,7 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
     <article className="flex flex-col gap-5">
       <Link
         href={href}
+        aria-label={post.title}
         className="relative block aspect-[870/366] overflow-hidden rounded-[8px] bg-neutral-100"
       >
         {image?.sourceUrl && (
