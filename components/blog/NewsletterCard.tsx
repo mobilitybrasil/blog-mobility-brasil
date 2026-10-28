@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 const EMAIL_REGEX = /@.*\.[A-Za-z]/;
 
@@ -19,6 +19,7 @@ interface NewsletterCardProps {
  * substituída por um endpoint dedicado do WordPress no futuro.
  */
 export function NewsletterCard({ privacyUrl = "#" }: NewsletterCardProps = {}) {
+  const emailInputId = useId();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [invalid, setInvalid] = useState(false);
@@ -92,11 +93,11 @@ export function NewsletterCard({ privacyUrl = "#" }: NewsletterCardProps = {}) {
               : "border-[#e7e7e7]"
           }`}
         >
-          <label htmlFor="sidebar-newsletter-email" className="sr-only">
+          <label htmlFor={emailInputId} className="sr-only">
             E-mail
           </label>
           <input
-            id="sidebar-newsletter-email"
+            id={emailInputId}
             type="email"
             placeholder="E-mail"
             required
