@@ -20,20 +20,20 @@ export function BlogHero({ categories }: BlogHeroProps) {
         <div className="relative z-10 flex flex-col justify-center px-6 pb-4 pt-8 sm:px-10 sm:pt-12 lg:px-14 lg:py-14">
           <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-[#6700c9] sm:text-sm">
             <span aria-hidden="true" className="h-px w-8 bg-[#7c05f2]" />
-            Mobility Brasil · Conteúdo
+            Blog Mobility Brasil
           </div>
           <h1 className="mt-5 max-w-xl font-display text-[2.65rem] font-bold leading-[0.99] tracking-[-0.045em] sm:text-5xl lg:text-[3.65rem]">
-            Mobilidade para viver do seu jeito.
+            Compare soluções de mobilidade com mais clareza.
           </h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-[#594d62] sm:text-lg sm:leading-8">
-            Informação, tecnologia assistiva e histórias que abrem caminhos para mais autonomia — com a experiência de quem vive mobilidade todos os dias.
+            Cadeiras de rodas, acessórios e tecnologia assistiva: entenda as diferenças, compare recursos e encontre orientações para a sua rotina.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link
               href="#latest-news-heading"
               className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#7c05f2] px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(96,0,187,0.22)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6504c6]"
             >
-              Explore o blog <span aria-hidden="true">↘</span>
+              Ver artigos recentes <span aria-hidden="true">↘</span>
             </Link>
             <a
               href={ABOUT_URL}
@@ -59,22 +59,21 @@ export function BlogHero({ categories }: BlogHeroProps) {
             className="mobility-home-hero__image object-contain object-center mix-blend-multiply px-2 pb-3 pt-0 sm:px-8 sm:pb-6 lg:px-4 lg:py-6"
           />
           <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-full border border-white/70 bg-white/85 py-2 pl-2 pr-4 shadow-[0_12px_36px_rgba(42,18,61,0.12)] backdrop-blur-md sm:bottom-8 sm:left-8">
-            <span className="flex size-9 items-center justify-center rounded-full bg-[#7c05f2] text-sm font-bold text-white">M</span>
-            <span className="text-xs font-semibold leading-tight text-[#352540] sm:text-sm">Tecnologia assistiva<br />com identidade Mobility</span>
+            <span className="text-xs font-bold uppercase tracking-[0.1em] text-[#352540] sm:text-sm">Mobility Venom · cadeira manual</span>
           </div>
-          <span aria-hidden="true" className="absolute right-5 top-5 rounded-full border border-white/70 bg-white/65 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#5e3484] backdrop-blur-sm sm:right-8 sm:top-8 sm:text-xs">Autonomia em movimento</span>
+          <span aria-hidden="true" className="absolute right-5 top-5 rounded-full border border-white/70 bg-white/65 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#5e3484] backdrop-blur-sm sm:right-8 sm:top-8 sm:text-xs">Modelo autoral Mobility</span>
         </div>
       </div>
 
       <div className="relative z-10 grid gap-5 border-t border-[#d9cbe5] bg-white/70 px-5 py-5 backdrop-blur sm:px-8 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-8 lg:px-10">
         <div className="min-w-0">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#675776]">Encontre seu próximo assunto</p>
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#675776]">Acesse por categoria</p>
             <Link href="/categorias" className="shrink-0 text-xs font-bold text-[#6504c6] underline decoration-[#cbb3e2] underline-offset-4 hover:text-[#45008a]">Todas as categorias</Link>
           </div>
-          <ul className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+          <ul className="flex flex-wrap gap-2">
             {featuredCategories.map((category) => (
-              <li key={category.databaseId} className="shrink-0">
+              <li key={category.databaseId}>
                 <Link href={`/${category.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-[#dfd3e9] bg-white px-4 py-2 text-sm font-semibold text-[#3c2b4a] transition hover:border-[#7c05f2] hover:bg-[#f8f1ff] hover:text-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c05f2]">
                   {category.name}
                 </Link>

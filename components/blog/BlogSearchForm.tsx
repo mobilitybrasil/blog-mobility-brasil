@@ -25,7 +25,7 @@ export function BlogSearchForm({
           type="search"
           name="q"
           defaultValue={initialQuery}
-          placeholder="Ex.: escolher uma cadeira de rodas"
+          placeholder="Ex.: cadeira de rodas, postura ou acessórios"
           maxLength={100}
           required
           className="min-w-0 flex-1 border-0 bg-transparent py-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-500 focus:ring-0"
@@ -35,7 +35,7 @@ export function BlogSearchForm({
         type="submit"
         className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-[#7C05F2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C05F2]"
       >
-        Buscar
+        Buscar artigos
       </button>
     </form>
   );
