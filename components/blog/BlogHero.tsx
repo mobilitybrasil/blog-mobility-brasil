@@ -36,7 +36,7 @@ export function BlogHero({ categories }: BlogHeroProps) {
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
-              href="#latest-heading"
+              href="#latest-news-heading"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#7C05F2] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-black/20 transition hover:bg-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Explorar artigos
