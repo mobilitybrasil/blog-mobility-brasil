@@ -23,10 +23,10 @@ export function BlogHero({ categories }: BlogHeroProps) {
             Blog Mobility Brasil
           </div>
           <h1 className="mt-5 max-w-xl font-display text-[2.65rem] font-bold leading-[0.99] tracking-[-0.045em] sm:text-5xl lg:text-[3.65rem]">
-            Guias práticos para escolher e usar cadeira de rodas.
+            Compare cadeiras de rodas, scooters e outros equipamentos.
           </h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-[#594d62] sm:text-lg sm:leading-8">
-            Compare modelos e acessórios, entenda recursos de tecnologia assistiva e encontre orientações sobre postura, cuidados e acessibilidade para a sua rotina.
+            Entenda diferenças entre modelos manuais e motorizados, scooters e cadeiras de banho; veja orientações sobre acessórios, tecnologia assistiva, postura, cuidados e acessibilidade.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link
