@@ -69,7 +69,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
               priority
               unoptimized
               sizes="(max-width: 1023px) 100vw, 576px"
-              className="object-cover object-[78%_center]"
+              className="origin-right scale-110 object-cover object-[100%_center]"
             />
           )}
         </div>
