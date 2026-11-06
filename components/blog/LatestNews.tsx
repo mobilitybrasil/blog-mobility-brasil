@@ -66,6 +66,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
             alt={image.altText?.trim() || activePost.title}
             fill
             priority
+            unoptimized
             sizes="(max-width: 1023px) 100vw, 1152px"
             className="absolute inset-0 -z-20 object-cover"
           />
