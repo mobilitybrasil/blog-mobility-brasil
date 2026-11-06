@@ -60,7 +60,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
         aria-roledescription="slide"
         aria-label={`Artigo ${activeIndex + 1} de ${posts.length}`}
       >
-        <div className="relative order-1 min-h-[14rem] bg-[linear-gradient(125deg,#2b1738,#7c05f2)] sm:min-h-[18rem] lg:order-2 lg:min-h-[35rem]">
+        <div className="relative order-1 min-h-[14rem] overflow-hidden bg-[linear-gradient(125deg,#2b1738,#7c05f2)] sm:min-h-[18rem] lg:order-2 lg:min-h-[35rem]">
           {image?.sourceUrl && (
             <Image
               src={image.sourceUrl}
