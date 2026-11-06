@@ -13,7 +13,7 @@ export function BlogSearchForm({
     <form
       action="/buscar"
       role="search"
-      className={`flex w-full max-w-3xl items-stretch gap-2 rounded-md border border-[var(--color-brand-divider)] bg-white p-1.5 shadow-sm focus-within:border-black ${compact ? "max-w-none" : ""}`}
+      className={`flex w-full max-w-3xl items-stretch gap-2 rounded-lg border border-[var(--color-brand-divider)] bg-white p-1.5 shadow-sm transition focus-within:border-[#7C05F2] focus-within:ring-2 focus-within:ring-[#7C05F2]/15 ${compact ? "max-w-none" : ""}`}
     >
       <label className="sr-only" htmlFor="blog-search">
         Buscar artigos no blog
@@ -25,7 +25,7 @@ export function BlogSearchForm({
           type="search"
           name="q"
           defaultValue={initialQuery}
-          placeholder="Ex.: escolher uma cadeira de rodas"
+          placeholder="Ex.: cadeira de rodas, postura ou acessórios"
           maxLength={100}
           required
           className="min-w-0 flex-1 border-0 bg-transparent py-2 text-sm text-neutral-900 outline-none placeholder:text-neutral-500 focus:ring-0"
@@ -33,9 +33,9 @@ export function BlogSearchForm({
       </div>
       <button
         type="submit"
-        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[4px] bg-[color:var(--color-brand-black)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-[#7C05F2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C05F2]"
       >
-        Buscar
+        Buscar artigos
       </button>
     </form>
   );

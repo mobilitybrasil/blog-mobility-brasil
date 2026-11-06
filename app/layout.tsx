@@ -39,19 +39,19 @@ const helveticaNeue = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Mobilidade, acessibilidade e tecnologia assistiva",
+    default: "Blog Mobility Brasil | Mobilidade e Tecnologia Assistiva",
     template: "%s · Mobility Brasil",
   },
   description:
-    "Conteúdo sobre cadeiras de rodas, acessibilidade e tecnologia assistiva para apoiar escolhas de mobilidade no dia a dia.",
+    "Compare cadeiras de rodas, scooters, cadeiras de banho e acessórios. Encontre guias sobre tecnologia assistiva, postura, cuidados e acessibilidade.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     siteName: "Blog Mobility Brasil",
-    title: "Mobilidade, acessibilidade e tecnologia assistiva · Mobility Brasil",
+    title: "Blog Mobility Brasil | Mobilidade e Tecnologia Assistiva",
     description:
-      "Conteúdo sobre cadeiras de rodas, acessibilidade e tecnologia assistiva para apoiar escolhas de mobilidade no dia a dia.",
+      "Compare cadeiras de rodas, scooters, cadeiras de banho e acessórios. Encontre guias sobre tecnologia assistiva, postura, cuidados e acessibilidade.",
     url: SITE_URL,
   },
   twitter: { card: "summary" },

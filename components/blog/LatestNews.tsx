@@ -1,17 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { AngleLeftIcon, AngleRightIcon } from "@/components/layout/icons";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
-import { LatestNewsMobileCarousel } from "./LatestNewsMobileCarousel";
-import { NewsletterCard } from "./NewsletterCard";
-import { SecondaryNewsCard } from "./SecondaryNewsCard";
 
 interface LatestNewsProps {
-  /**
-   * Posts mais recentes em ordem decrescente. Desktop usa `posts[0]` como
-   * destaque e `posts[1]` no card lateral. Mobile usa todos como slides do
-   * carrossel.
-   */
   posts: PostListItem[];
 }
 
@@ -20,109 +16,131 @@ function buildPostHref(post: PostListItem): string {
   return `/${category}/${post.slug}`;
 }
 
-function FeaturedNewsCard({ post }: { post: PostListItem }) {
-  const href = buildPostHref(post);
-  const image = post.featuredImage?.node;
-  const excerpt = stripHtml(post.excerpt);
-  const author = post.author?.node;
-  const name = author?.name ?? "Autor desconhecido";
+export function LatestNews({ posts }: LatestNewsProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  if (posts.length === 0) return null;
+
+  const activePost = posts[activeIndex];
+  const image = activePost.featuredImage?.node;
+  const category = activePost.categories?.nodes[0];
+  const excerpt = stripHtml(activePost.excerpt);
+
+  function goTo(index: number) {
+    setActiveIndex(Math.max(0, Math.min(index, posts.length - 1)));
+  }
 
   return (
-    <article className="flex flex-col gap-5">
-      <Link
-        href={href}
-        aria-label={post.title}
-        className="relative block aspect-[870/366] overflow-hidden rounded-[8px] bg-neutral-100"
-      >
-        {image?.sourceUrl && (
-          <Image
-            src={image.sourceUrl}
-            alt={image.altText?.trim() || post.title}
-            fill
-            sizes="(min-width: 1024px) 60vw, 100vw"
-            className="object-cover"
-            priority
-          />
+    <section aria-labelledby="latest-news-heading" className="px-4 sm:px-6">
+      <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#6504c6] sm:text-xs">
+            Publicações recentes
+          </p>
+          <h2
+            id="latest-news-heading"
+            className="mt-1 font-display text-xl font-bold tracking-tight text-[#21162c] sm:text-2xl"
+          >
+            Em destaque
+          </h2>
+        </div>
+        {posts.length > 1 && (
+          <span className="pb-1 font-display text-xs font-semibold tabular-nums text-[#65596c] sm:text-sm">
+            {String(activeIndex + 1).padStart(2, "0")}
+            <span className="px-1.5 text-[#b9a9c7]">/</span>
+            {String(posts.length).padStart(2, "0")}
+          </span>
         )}
-      </Link>
+      </div>
 
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2.5">
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display text-[18px] font-medium leading-tight text-[#101828]">
-              <Link href={href} className="hover:underline">
-                {post.title}
+      <article
+        key={activePost.databaseId}
+        className="mobility-featured-article relative isolate grid grid-cols-1 overflow-hidden rounded-2xl bg-[#24142f] text-white shadow-[0_18px_48px_rgba(39,19,54,0.17)] sm:rounded-3xl lg:min-h-[35rem] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
+        aria-live="polite"
+        aria-roledescription="slide"
+        aria-label={`Artigo ${activeIndex + 1} de ${posts.length}`}
+      >
+        <div className="relative order-1 min-h-[14rem] overflow-hidden bg-[linear-gradient(125deg,#2b1738,#7c05f2)] sm:min-h-[18rem] lg:order-2 lg:min-h-[35rem]">
+          {image?.sourceUrl && (
+            <Image
+              src={image.sourceUrl}
+              alt={image.altText?.trim() || activePost.title}
+              fill
+              priority
+              unoptimized
+              sizes="(max-width: 1023px) 100vw, 576px"
+              className="origin-right scale-[1.9] object-cover object-[100%_center] lg:scale-[1.25]"
+            />
+          )}
+        </div>
+
+        <div className="order-2 flex flex-col justify-center bg-[#24142f] p-6 pb-24 sm:p-10 sm:pb-28 lg:order-1 lg:p-12 lg:pb-28">
+          <div className="flex items-center gap-3 text-[11px] font-semibold text-white/80 sm:text-sm">
+            {category && (
+              <span className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
+                {category.name}
+              </span>
+            )}
+            <time dateTime={activePost.date}>{formatDate(activePost.date)}</time>
+          </div>
+          <div className="mt-5 max-w-3xl" aria-live="polite" aria-atomic="true">
+            <h3 className="font-display text-[2rem] font-bold leading-[1.04] tracking-[-0.035em] sm:text-4xl lg:text-[2.75rem]">
+              <Link
+                href={buildPostHref(activePost)}
+                className="rounded-sm decoration-white/60 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              >
+                {activePost.title}
               </Link>
             </h3>
             {excerpt && (
-              <p className="line-clamp-2 text-[14px] leading-[24px] text-[#6B6D70]">
+              <p className="mt-4 line-clamp-3 max-w-2xl text-sm leading-6 text-white/80 sm:mt-5 sm:text-base sm:leading-7">
                 {excerpt}
               </p>
             )}
           </div>
-          <div className="h-px w-full bg-[#f1f1f1]" />
+          <Link
+            href={buildPostHref(activePost)}
+            className="mt-6 inline-flex min-h-11 w-fit items-center gap-3 rounded-full bg-white px-5 py-3 text-sm font-bold text-[#24142f] transition hover:-translate-y-0.5 hover:bg-[#f2e8ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            Ler artigo <span aria-hidden="true">↗</span>
+          </Link>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-full bg-neutral-200">
-            {author?.avatar?.url && (
-              <Image
-                src={author.avatar.url}
-                alt={name}
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="font-display text-[12px] font-medium leading-none text-[#101828]">
-              {name}
-            </span>
-            <time
-              dateTime={post.date}
-              className="text-[10px] leading-none text-[#6B6D70]"
+
+        {posts.length > 1 && (
+          <div className="absolute bottom-5 right-5 flex items-center gap-2.5 rounded-full border border-white/20 bg-[#17101f]/45 p-1.5 backdrop-blur-md sm:bottom-7 sm:right-8 sm:gap-3 sm:p-2">
+            <button
+              type="button"
+              onClick={() => goTo(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Ver artigo anterior"
+              className="flex size-10 items-center justify-center rounded-full text-white transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40 sm:size-11"
             >
-              {formatDate(post.date)}
-            </time>
+              <AngleLeftIcon className="size-5" />
+            </button>
+            <div className="flex items-center gap-1.5" role="group" aria-label="Escolher artigo em destaque">
+              {posts.map((post, index) => (
+                <button
+                  key={post.databaseId}
+                  type="button"
+                  onClick={() => goTo(index)}
+                  aria-label={`Mostrar artigo ${index + 1}: ${post.title}`}
+                  aria-current={index === activeIndex ? "true" : undefined}
+                  className={`rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${index === activeIndex ? "h-2 w-7 bg-white" : "size-2 bg-white/50 hover:bg-white/80"}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => goTo(activeIndex + 1)}
+              disabled={activeIndex === posts.length - 1}
+              aria-label="Ver próximo artigo"
+              className="flex size-10 items-center justify-center rounded-full text-white transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40 sm:size-11"
+            >
+              <AngleRightIcon className="size-5" />
+            </button>
           </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-export function LatestNews({ posts }: LatestNewsProps) {
-  if (posts.length === 0) return null;
-
-  const featured = posts[0];
-  const secondary = posts[1] ?? null;
-
-  return (
-    <section
-      aria-labelledby="latest-news-heading"
-      className="flex flex-col gap-4 px-6 lg:gap-6"
-    >
-      <h2
-        id="latest-news-heading"
-        className="font-display text-[18px] font-medium text-black lg:text-[20px]"
-      >
-        Leia nossas notícias mais recentes
-      </h2>
-
-      {/* Mobile: carrossel + newsletter empilhada */}
-      <div className="flex flex-col gap-4 lg:hidden">
-        <LatestNewsMobileCarousel posts={posts} />
-        <NewsletterCard />
-      </div>
-
-      {/* Desktop: card grande + sidebar (secondary + newsletter) */}
-      <div className="hidden gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_452px] lg:items-start">
-        <FeaturedNewsCard post={featured} />
-        <aside className="flex flex-col gap-3 lg:pl-[18px] lg:pr-[32px]">
-          {secondary && <SecondaryNewsCard post={secondary} />}
-          <NewsletterCard />
-        </aside>
-      </div>
+        )}
+      </article>
     </section>
   );
 }
