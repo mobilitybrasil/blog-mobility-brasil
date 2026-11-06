@@ -55,30 +55,26 @@ export function LatestNews({ posts }: LatestNewsProps) {
 
       <article
         key={activePost.databaseId}
-        className="mobility-featured-article relative isolate min-h-[29rem] overflow-hidden rounded-2xl bg-[#24142f] text-white shadow-[0_18px_48px_rgba(39,19,54,0.17)] sm:min-h-[32rem] sm:rounded-3xl lg:min-h-[35rem]"
+        className="mobility-featured-article relative isolate grid grid-cols-1 overflow-hidden rounded-2xl bg-[#24142f] text-white shadow-[0_18px_48px_rgba(39,19,54,0.17)] sm:rounded-3xl lg:min-h-[35rem] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
         aria-live="polite"
         aria-roledescription="slide"
         aria-label={`Artigo ${activeIndex + 1} de ${posts.length}`}
       >
-        {image?.sourceUrl ? (
-          <Image
-            src={image.sourceUrl}
-            alt={image.altText?.trim() || activePost.title}
-            fill
-            priority
-            unoptimized
-            sizes="(max-width: 1023px) 100vw, 1152px"
-            className="absolute inset-0 -z-20 object-cover"
-          />
-        ) : (
-          <div aria-hidden="true" className="absolute inset-0 -z-20 bg-[linear-gradient(125deg,#2b1738,#7c05f2)]" />
-        )}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(16,10,22,0.91)_0%,rgba(24,15,32,0.74)_45%,rgba(24,15,32,0.06)_100%),linear-gradient(0deg,rgba(16,10,22,0.72)_0%,transparent_62%)]"
-        />
+        <div className="relative order-1 min-h-[14rem] bg-[linear-gradient(125deg,#2b1738,#7c05f2)] sm:min-h-[18rem] lg:order-2 lg:min-h-[35rem]">
+          {image?.sourceUrl && (
+            <Image
+              src={image.sourceUrl}
+              alt={image.altText?.trim() || activePost.title}
+              fill
+              priority
+              unoptimized
+              sizes="(max-width: 1023px) 100vw, 576px"
+              className="object-cover object-[78%_center]"
+            />
+          )}
+        </div>
 
-        <div className="flex min-h-[29rem] flex-col justify-end p-6 pb-24 sm:min-h-[32rem] sm:p-10 sm:pb-28 lg:min-h-[35rem] lg:max-w-[74%] lg:p-14 lg:pb-28">
+        <div className="order-2 flex flex-col justify-center bg-[#24142f] p-6 pb-24 sm:p-10 sm:pb-28 lg:order-1 lg:p-12 lg:pb-28">
           <div className="flex items-center gap-3 text-[11px] font-semibold text-white/80 sm:text-sm">
             {category && (
               <span className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
@@ -88,7 +84,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
             <time dateTime={activePost.date}>{formatDate(activePost.date)}</time>
           </div>
           <div className="mt-5 max-w-3xl" aria-live="polite" aria-atomic="true">
-            <h3 className="font-display text-[2rem] font-bold leading-[1.04] tracking-[-0.035em] sm:text-4xl lg:text-5xl">
+            <h3 className="font-display text-[2rem] font-bold leading-[1.04] tracking-[-0.035em] sm:text-4xl lg:text-[2.75rem]">
               <Link
                 href={buildPostHref(activePost)}
                 className="rounded-sm decoration-white/60 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"

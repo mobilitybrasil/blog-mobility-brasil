@@ -24,7 +24,7 @@ export function BlogHero({ categories }: BlogHeroProps) {
               id="blog-intro-heading"
               className="mt-3 font-display text-2xl font-bold leading-tight tracking-[-0.035em] text-[#21162c] sm:text-3xl lg:text-4xl"
             >
-              Compare cadeiras de rodas, scooters e outros equipamentos.
+              Tudo sobre cadeira de rodas, scooters, e outros equipamentos
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#594d62] sm:text-base sm:leading-7">
               Guias sobre modelos manuais e motorizados, cadeiras de banho e acessórios, além de orientações sobre tecnologia assistiva, postura, cuidados e acessibilidade.
