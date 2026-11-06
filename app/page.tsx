@@ -24,9 +24,9 @@ export default async function HomePage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-12 py-12">
       <JsonLd data={buildBlogHomeJsonLd(posts)} />
-      <BlogHero categories={categories} />
-
       {latestPosts.length > 0 && <LatestNews posts={latestPosts} />}
+
+      <BlogHero categories={categories} />
 
       <CategoryDirectory categories={categories} />
 
