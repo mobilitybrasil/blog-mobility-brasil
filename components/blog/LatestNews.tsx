@@ -75,6 +75,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
               alt=""
               fill
               preload={activeIndex === 0}
+              unoptimized
               sizes="100vw"
               className={`mobility-featured-image ${authoredImage ? "mobility-featured-image--product object-contain object-right" : "mobility-featured-image--editorial object-cover object-[82%_center]"}`}
             />
