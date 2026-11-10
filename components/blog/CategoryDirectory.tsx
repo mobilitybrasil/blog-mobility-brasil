@@ -92,14 +92,14 @@ export function CategoryDirectory({
             {description}
           </p>
         </div>
-        <div className="relative min-h-32 bg-[#f2f1ee] sm:min-h-36">
+        <div className="relative min-h-32 bg-[#f2f1ee] sm:min-h-56">
           <Image
             src="/images/brand/mobility-venom.jpg"
             alt="Cadeira de rodas manual Mobility Venom"
             fill
             unoptimized
             sizes="240px"
-            className="object-contain p-1.5 mix-blend-multiply sm:p-2"
+            className="object-contain p-1.5 mix-blend-multiply sm:object-cover sm:p-0"
           />
         </div>
       </div>
