@@ -42,6 +42,7 @@ export function CategoryDirectory({
             src="/images/brand/mobility-venom.jpg"
             alt="Cadeira de rodas manual Mobility Venom"
             fill
+            unoptimized
             sizes="288px"
             className="object-contain p-2"
           />
