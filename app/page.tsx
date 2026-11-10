@@ -22,7 +22,7 @@ export default async function HomePage() {
   const latestPosts = posts.slice(0, 3);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-12 py-12">
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 py-8 sm:gap-10 sm:py-10">
       <JsonLd data={buildBlogHomeJsonLd(posts)} />
       {latestPosts.length > 0 && <LatestNews posts={latestPosts} />}
 
