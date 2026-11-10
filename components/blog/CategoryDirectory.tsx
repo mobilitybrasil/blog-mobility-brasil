@@ -27,7 +27,7 @@ export function CategoryDirectory({
       <div className="max-w-3xl">
         <h2
           id="category-directory-heading"
-          className="font-display text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl"
+          className="scroll-mt-24 font-display text-2xl font-bold tracking-tight text-[#171717] sm:text-3xl"
         >
           {title}
         </h2>
