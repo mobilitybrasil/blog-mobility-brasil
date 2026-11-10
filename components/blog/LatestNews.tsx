@@ -90,7 +90,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
               <time dateTime={activePost.date}>{formatDate(activePost.date)}</time>
             </div>
             <div className="mt-3 max-w-3xl" aria-live="polite" aria-atomic="true">
-              <h3 className="font-display text-[1.8rem] font-bold leading-[1.08] tracking-[-0.035em] text-[#171717] sm:text-4xl lg:text-[2.65rem]">
+              <h3 className="font-display text-[1.55rem] font-bold leading-[1.08] tracking-[-0.035em] text-[#171717] sm:text-4xl lg:text-[2.65rem]">
                 <Link
                   href={buildPostHref(activePost)}
                   className="rounded-sm decoration-[#171717]/50 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#171717]"
@@ -99,7 +99,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
                 </Link>
               </h3>
               {excerpt && (
-                <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-[#5e5b57] sm:mt-4 sm:text-base sm:leading-7">
+                <p className="mt-3 hidden line-clamp-2 max-w-2xl text-sm leading-6 text-[#5e5b57] sm:mt-4 sm:block sm:text-base sm:leading-7">
                   {excerpt}
                 </p>
               )}
