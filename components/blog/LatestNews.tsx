@@ -82,7 +82,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
           )}
         </div>
 
-        <div className="absolute inset-x-4 bottom-4 z-10 flex flex-col rounded-xl border border-[#e8e6e2] bg-white/95 p-5 shadow-[0_8px_28px_rgba(0,0,0,0.1)] backdrop-blur-md sm:inset-x-auto sm:bottom-7 sm:left-7 sm:w-[min(76%,40rem)] sm:p-8 lg:bottom-12 lg:left-12 lg:p-9">
+        <div className="absolute inset-x-4 bottom-4 z-10 flex flex-col rounded-xl border border-[#e8e6e2] bg-white/95 p-5 shadow-[0_8px_28px_rgba(0,0,0,0.1)] backdrop-blur-md sm:inset-x-auto sm:bottom-7 sm:left-0 sm:w-[min(76%,40rem)] sm:p-8 lg:bottom-12 lg:left-0 lg:p-9">
           <div className="mobility-featured-copy flex flex-col">
             <div className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#66635f] sm:text-xs">
               {category && <span>{category.name}</span>}
