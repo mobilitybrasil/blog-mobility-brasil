@@ -16,6 +16,12 @@ function buildPostHref(post: PostListItem): string {
   return `/${category}/${post.slug}`;
 }
 
+const authoredFeatureImages: Record<string, string> = {
+  "cadeira-de-rodas-de-banho-com-rodas-grandes-ou-pequenas-o-que-considerar-no-banheiro":
+    "/images/brand/mobility-evo-bath.jpg",
+  "preco-cadeira-de-rodas-sob-medida": "/images/brand/mobility-x1.jpg",
+};
+
 export function LatestNews({ posts }: LatestNewsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -23,6 +29,8 @@ export function LatestNews({ posts }: LatestNewsProps) {
 
   const activePost = posts[activeIndex];
   const image = activePost.featuredImage?.node;
+  const authoredImage = authoredFeatureImages[activePost.slug];
+  const imageSource = authoredImage ?? image?.sourceUrl;
   const category = activePost.categories?.nodes[0];
   const excerpt = stripHtml(activePost.excerpt);
 
@@ -34,7 +42,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
     <section aria-labelledby="latest-news-heading" className="px-4 sm:px-6">
       <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#6504c6] sm:text-xs">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5f5d59] sm:text-xs">
             Publicações recentes
           </p>
           <h2
@@ -47,7 +55,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
         {posts.length > 1 && (
           <span className="pb-1 font-display text-xs font-semibold tabular-nums text-[#65596c] sm:text-sm">
             {String(activeIndex + 1).padStart(2, "0")}
-            <span className="px-1.5 text-[#b9a9c7]">/</span>
+            <span className="px-1.5 text-[#aaa7a1]">/</span>
             {String(posts.length).padStart(2, "0")}
           </span>
         )}
@@ -55,65 +63,63 @@ export function LatestNews({ posts }: LatestNewsProps) {
 
       <article
         key={activePost.databaseId}
-        className="mobility-featured-article relative isolate grid grid-cols-1 overflow-hidden rounded-2xl bg-[#24142f] text-white shadow-[0_18px_48px_rgba(39,19,54,0.17)] sm:rounded-3xl lg:min-h-[35rem] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
+        className="mobility-featured-article group relative isolate min-h-[32rem] overflow-hidden rounded-2xl border border-[#e4e2de] bg-[#f1f0ec] text-[#171717] shadow-[0_16px_42px_rgba(20,20,20,0.1)] sm:min-h-[36rem] sm:rounded-3xl lg:min-h-[34rem]"
         aria-live="polite"
         aria-roledescription="slide"
         aria-label={`Artigo ${activeIndex + 1} de ${posts.length}`}
       >
-        <div className="relative order-1 min-h-[14rem] overflow-hidden bg-[linear-gradient(125deg,#2b1738,#7c05f2)] sm:min-h-[18rem] lg:order-2 lg:min-h-[35rem]">
-          {image?.sourceUrl && (
+        <div className="absolute inset-0 -z-10 overflow-hidden bg-[#f1f0ec]">
+          {imageSource && (
             <Image
-              src={image.sourceUrl}
-              alt={image.altText?.trim() || activePost.title}
+              src={imageSource}
+              alt=""
               fill
-              priority
-              unoptimized
-              sizes="(max-width: 1023px) 100vw, 576px"
-              className="origin-right scale-[1.9] object-cover object-[100%_center] lg:scale-[1.25]"
+              preload={activeIndex === 0}
+              sizes="100vw"
+              className={`mobility-featured-image ${authoredImage ? "mobility-featured-image--product object-contain object-right" : "mobility-featured-image--editorial object-cover object-[82%_center]"}`}
             />
           )}
         </div>
 
-        <div className="order-2 flex flex-col justify-center bg-[#24142f] p-6 pb-24 sm:p-10 sm:pb-28 lg:order-1 lg:p-12 lg:pb-28">
-          <div className="flex items-center gap-3 text-[11px] font-semibold text-white/80 sm:text-sm">
-            {category && (
-              <span className="rounded-full border border-white/35 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-                {category.name}
-              </span>
-            )}
-            <time dateTime={activePost.date}>{formatDate(activePost.date)}</time>
+        <div className="absolute inset-x-4 bottom-4 z-10 flex flex-col rounded-xl border border-[#e8e6e2] bg-white/95 p-5 shadow-[0_8px_28px_rgba(0,0,0,0.1)] backdrop-blur-md sm:inset-x-auto sm:bottom-7 sm:left-7 sm:w-[min(76%,40rem)] sm:p-8 lg:bottom-12 lg:left-12 lg:p-9">
+          <div className="mobility-featured-copy flex flex-col">
+            <div className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#66635f] sm:text-xs">
+              {category && <span>{category.name}</span>}
+              {category && <span aria-hidden="true">·</span>}
+              <time dateTime={activePost.date}>{formatDate(activePost.date)}</time>
+            </div>
+            <div className="mt-3 max-w-3xl" aria-live="polite" aria-atomic="true">
+              <h3 className="font-display text-[1.8rem] font-bold leading-[1.08] tracking-[-0.035em] text-[#171717] sm:text-4xl lg:text-[2.65rem]">
+                <Link
+                  href={buildPostHref(activePost)}
+                  className="rounded-sm decoration-[#171717]/50 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#171717]"
+                >
+                  {activePost.title}
+                </Link>
+              </h3>
+              {excerpt && (
+                <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-[#5e5b57] sm:mt-4 sm:text-base sm:leading-7">
+                  {excerpt}
+                </p>
+              )}
+            </div>
+            <Link
+              href={buildPostHref(activePost)}
+              className="mt-4 inline-flex min-h-10 w-fit items-center gap-2 border-b border-[#171717] pb-1 text-sm font-bold text-[#171717] transition-colors hover:border-[#5d5a54] hover:text-[#5d5a54] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#171717] sm:mt-5"
+            >
+              Ler artigo <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none">↗</span>
+            </Link>
           </div>
-          <div className="mt-5 max-w-3xl" aria-live="polite" aria-atomic="true">
-            <h3 className="font-display text-[2rem] font-bold leading-[1.04] tracking-[-0.035em] sm:text-4xl lg:text-[2.75rem]">
-              <Link
-                href={buildPostHref(activePost)}
-                className="rounded-sm decoration-white/60 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-              >
-                {activePost.title}
-              </Link>
-            </h3>
-            {excerpt && (
-              <p className="mt-4 line-clamp-3 max-w-2xl text-sm leading-6 text-white/80 sm:mt-5 sm:text-base sm:leading-7">
-                {excerpt}
-              </p>
-            )}
-          </div>
-          <Link
-            href={buildPostHref(activePost)}
-            className="mt-6 inline-flex min-h-11 w-fit items-center gap-3 rounded-full bg-white px-5 py-3 text-sm font-bold text-[#24142f] transition hover:-translate-y-0.5 hover:bg-[#f2e8ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Ler artigo <span aria-hidden="true">↗</span>
-          </Link>
         </div>
 
         {posts.length > 1 && (
-          <div className="absolute bottom-5 right-5 flex items-center gap-2.5 rounded-full border border-white/20 bg-[#17101f]/45 p-1.5 backdrop-blur-md sm:bottom-7 sm:right-8 sm:gap-3 sm:p-2">
+          <div className="absolute right-6 top-6 z-10 flex items-center gap-2 rounded-full border border-black/10 bg-white/90 p-1.5 shadow-sm backdrop-blur-sm sm:right-8 sm:top-8 sm:gap-3 sm:p-2">
             <button
               type="button"
               onClick={() => goTo(activeIndex - 1)}
               disabled={activeIndex === 0}
               aria-label="Ver artigo anterior"
-              className="flex size-10 items-center justify-center rounded-full text-white transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40 sm:size-11"
+              className="flex size-9 items-center justify-center rounded-full text-[#242321] transition-colors hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-[#171717] disabled:cursor-not-allowed disabled:opacity-35 sm:size-10"
             >
               <AngleLeftIcon className="size-5" />
             </button>
@@ -125,7 +131,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
                   onClick={() => goTo(index)}
                   aria-label={`Mostrar artigo ${index + 1}: ${post.title}`}
                   aria-current={index === activeIndex ? "true" : undefined}
-                  className={`rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${index === activeIndex ? "h-2 w-7 bg-white" : "size-2 bg-white/50 hover:bg-white/80"}`}
+                  className={`rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171717] ${index === activeIndex ? "h-2 w-7 bg-[#171717]" : "size-2 bg-[#b7b4af] hover:bg-[#77736d]"}`}
                 />
               ))}
             </div>
@@ -134,7 +140,7 @@ export function LatestNews({ posts }: LatestNewsProps) {
               onClick={() => goTo(activeIndex + 1)}
               disabled={activeIndex === posts.length - 1}
               aria-label="Ver próximo artigo"
-              className="flex size-10 items-center justify-center rounded-full text-white transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40 sm:size-11"
+              className="flex size-9 items-center justify-center rounded-full text-[#242321] transition-colors hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-[#171717] disabled:cursor-not-allowed disabled:opacity-35 sm:size-10"
             >
               <AngleRightIcon className="size-5" />
             </button>
