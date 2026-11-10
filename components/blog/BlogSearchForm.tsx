@@ -13,7 +13,7 @@ export function BlogSearchForm({
     <form
       action="/buscar"
       role="search"
-      className={`flex w-full max-w-3xl items-stretch gap-2 rounded-lg border border-[var(--color-brand-divider)] bg-white p-1.5 shadow-sm transition focus-within:border-[#7C05F2] focus-within:ring-2 focus-within:ring-[#7C05F2]/15 ${compact ? "max-w-none" : ""}`}
+      className={`flex w-full max-w-3xl items-stretch gap-2 rounded-md border border-[#b8b8b8] bg-white p-1 transition focus-within:border-[#020205] focus-within:ring-2 focus-within:ring-[#020205]/15 ${compact ? "max-w-none" : ""}`}
     >
       <label className="sr-only" htmlFor="blog-search">
         Buscar artigos no blog
@@ -33,7 +33,7 @@ export function BlogSearchForm({
       </div>
       <button
         type="submit"
-        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-[#7C05F2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#6504c6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7C05F2]"
+        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[#020205] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#353535] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#020205]"
       >
         Buscar artigos
       </button>
