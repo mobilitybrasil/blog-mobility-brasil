@@ -538,3 +538,44 @@ html.acessibilidade-audio #barraAcessibilidade * {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+@media (max-width: 640px) {
+  .acessibilidade {
+    top: auto;
+    right: 0.75rem;
+    bottom: 1rem;
+    transform: none;
+    flex-direction: row;
+    width: auto;
+    border-radius: 4px;
+  }
+
+  .acessibilidade-botao {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+
+  .acessibilidade > .acessibilidade-botao:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .acessibilidade > .acessibilidade-botao:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .acessibilidade > .acessibilidade-botao + .acessibilidade-botao {
+    border-top: none;
+    border-left: 1px solid #e7e7e7;
+  }
+
+  .acessibilidade-zoom {
+    top: auto;
+    right: 0;
+    bottom: 100%;
+    transform: none;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}
