@@ -23,10 +23,10 @@ export function CategoryDirectory({
   return (
     <section
       aria-labelledby="category-directory-heading"
-      className="mx-4 overflow-hidden bg-white sm:mx-6"
+      className="mx-4 overflow-hidden rounded-3xl border border-[#dfded9] bg-[#f2f1ee] sm:mx-6"
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_6.5rem] bg-[#020205] text-white sm:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="flex flex-col justify-center px-4 py-5 sm:px-8 sm:py-7">
+      <div className="grid grid-cols-[minmax(0,1fr)_6.5rem] bg-[#020205] text-white sm:grid-cols-[minmax(0,1fr)_15rem]">
+        <div className="flex flex-col justify-center px-4 py-4 sm:px-7 sm:py-5">
           <h2
             id="category-directory-heading"
             className="scroll-mt-24 max-w-2xl font-display text-2xl font-bold italic leading-[1.02] tracking-[-0.025em] sm:text-3xl"
@@ -37,19 +37,19 @@ export function CategoryDirectory({
             {description}
           </p>
         </div>
-        <div className="relative min-h-36 bg-white sm:min-h-40">
+        <div className="relative min-h-32 bg-[#f4f3f0] sm:min-h-36">
           <Image
             src="/images/brand/mobility-venom.jpg"
             alt="Cadeira de rodas manual Mobility Venom"
             fill
             unoptimized
-            sizes="288px"
-            className="object-contain p-2"
+            sizes="240px"
+            className="object-contain p-1.5 sm:p-2"
           />
         </div>
       </div>
 
-      <ul className="grid border-b border-[#d2d2d2] sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3 lg:gap-x-9">
+      <ul className="columns-1 gap-x-8 px-4 sm:columns-2 sm:px-6 lg:columns-3">
         {visibleCategories.map((category) => {
           const children = (category.children?.nodes ?? []).filter(
             (child) => child.slug !== "uncategorized",
@@ -59,7 +59,7 @@ export function CategoryDirectory({
           return (
             <li
               key={category.databaseId}
-              className="group flex min-w-0 flex-col border-t border-[#d2d2d2] py-3.5 sm:py-4"
+              className="group mb-1 inline-block w-full break-inside-avoid-column border-t border-[#d2d2d2] pb-2 pt-2.5 align-top"
             >
               <div className="flex items-center justify-between gap-4">
                 <h3 className="font-display text-[17px] font-bold uppercase italic leading-tight tracking-[-0.015em] text-[#171717] sm:text-lg">
@@ -77,7 +77,7 @@ export function CategoryDirectory({
               </div>
 
               {categoryDescription && (
-                <p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-[#514f4b]">
+                <p className="mt-1 max-w-2xl text-[13px] leading-5 text-[#514f4b]">
                   {categoryDescription}
                 </p>
               )}
@@ -85,13 +85,13 @@ export function CategoryDirectory({
               {children.length > 0 && (
                 <ul
                   aria-label={`Subcategorias de ${category.name}`}
-                  className="mt-2 flex flex-wrap gap-x-3 border-t border-[#e1e1e1] pt-1"
+                  className="mt-1.5 flex flex-wrap gap-x-3 border-t border-[#e1e1e1] pt-1"
                 >
                   {children.map((child) => (
                     <li key={child.databaseId}>
                       <Link
                         href={`/${child.slug}`}
-                        className="inline-flex min-h-9 items-center border-b border-transparent py-1 text-[13px] font-medium leading-5 text-[#454545] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171717]"
+                        className="inline-flex min-h-8 items-center border-b border-transparent py-1 text-[13px] font-medium leading-5 text-[#454545] transition-colors hover:border-[#171717] hover:text-[#171717] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#171717]"
                       >
                         {child.name}
                       </Link>
