@@ -35,6 +35,58 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Editorial motion: transitions only on slide changes and direct hover. */
+.mobility-featured-image--product {
+  animation: mobility-feature-product-in 720ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.mobility-featured-image--editorial {
+  transform: scale(1.9);
+  transform-origin: 82% 50%;
+  animation: mobility-feature-cover-in 760ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.mobility-featured-copy {
+  animation: mobility-feature-copy-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .mobility-featured-article:hover .mobility-featured-image--product {
+    transform: scale(1.025);
+  }
+
+  .mobility-featured-article:hover .mobility-featured-image--editorial {
+    transform: scale(1.94);
+  }
+}
+
+@keyframes mobility-feature-product-in {
+  from { opacity: 0.7; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes mobility-feature-cover-in {
+  from { opacity: 0.7; transform: scale(1.96); }
+  to { opacity: 1; transform: scale(1.9); }
+}
+
+@keyframes mobility-feature-copy-in {
+  from { opacity: 0; translate: 0 10px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobility-featured-article *,
+  .mobility-featured-article *::before,
+  .mobility-featured-article *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Em fullscreen o <video> ocupa a tela inteira do dispositivo — manter
    `object-fit: contain` preserva a proporção original do MP4 em vez de
    cortar (que é o comportamento usado nos cards do carrossel). */
@@ -484,5 +536,46 @@ html.acessibilidade-audio #barraAcessibilidade * {
 @media (max-width: 420px) {
   .post-content .wp-block-gallery.has-nested-images {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+@media (max-width: 640px) {
+  .acessibilidade {
+    top: auto;
+    right: 0.75rem;
+    bottom: 1rem;
+    transform: none;
+    flex-direction: row;
+    width: auto;
+    border-radius: 4px;
+  }
+
+  .acessibilidade-botao {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+
+  .acessibilidade > .acessibilidade-botao:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .acessibilidade > .acessibilidade-botao:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .acessibilidade > .acessibilidade-botao + .acessibilidade-botao {
+    border-top: none;
+    border-left: 1px solid #e7e7e7;
+  }
+
+  .acessibilidade-zoom {
+    top: auto;
+    right: 0;
+    bottom: 100%;
+    transform: none;
+    margin-right: 0;
+    margin-bottom: 8px;
   }
 }
