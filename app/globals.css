@@ -35,35 +35,55 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Hero editorial da home: movimento leve no produto, sem deslocamento de layout. */
-.mobility-home-hero__image {
-  animation: mobilityProductEnter 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
-    mobilityProductFloat 8s ease-in-out 900ms infinite;
+/* Editorial motion: transitions only on slide changes and direct hover. */
+.mobility-featured-image--product {
+  animation: mobility-feature-product-in 720ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.mobility-home-hero__glow {
-  animation: mobilityGlow 12s ease-in-out infinite alternate;
+.mobility-featured-image--editorial {
+  transform: scale(1.9);
+  transform-origin: 82% 50%;
+  animation: mobility-feature-cover-in 760ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-@keyframes mobilityProductEnter {
-  from { opacity: 0; transform: translateY(18px) scale(0.985); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+.mobility-featured-copy {
+  animation: mobility-feature-copy-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes mobilityProductFloat {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -6px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .mobility-featured-article:hover .mobility-featured-image--product {
+    transform: scale(1.025);
+  }
+
+  .mobility-featured-article:hover .mobility-featured-image--editorial {
+    transform: scale(1.94);
+  }
 }
 
-@keyframes mobilityGlow {
-  from { opacity: 0.55; transform: translate3d(0, 0, 0) scale(0.96); }
-  to { opacity: 0.85; transform: translate3d(-14px, 10px, 0) scale(1.04); }
+@keyframes mobility-feature-product-in {
+  from { opacity: 0.7; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes mobility-feature-cover-in {
+  from { opacity: 0.7; transform: scale(1.96); }
+  to { opacity: 1; transform: scale(1.9); }
+}
+
+@keyframes mobility-feature-copy-in {
+  from { opacity: 0; translate: 0 10px; }
+  to { opacity: 1; translate: 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mobility-home-hero__image,
-  .mobility-home-hero__glow {
-    animation: none;
+  .mobility-featured-article *,
+  .mobility-featured-article *::before,
+  .mobility-featured-article *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
