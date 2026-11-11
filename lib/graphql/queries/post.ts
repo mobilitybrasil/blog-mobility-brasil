@@ -46,7 +46,7 @@ const POST_BY_SLUG_BASIC_QUERY = /* GraphQL */ `
       featuredImage {
         node {
           sourceUrl(size: LARGE)
-          srcSet(size: FULL)
+          srcSet(size: BLOG_FULL)
           altText
           mediaDetails {
             width
