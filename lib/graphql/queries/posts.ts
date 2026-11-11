@@ -89,7 +89,8 @@ const POSTS_BASIC_QUERY = /* GraphQL */ `
         modified
         featuredImage {
           node {
-            sourceUrl
+            sourceUrl(size: LARGE)
+            srcSet(size: FULL)
             altText
             mediaDetails {
               width
