@@ -19,6 +19,8 @@ export function CategoryShowcase({ page }: CategoryShowcaseProps) {
   const items: CategoryShowcaseItem[] = source.map((item) => ({
     title: item.title,
     src: item.src,
+    srcSet: item.srcSet,
+    sizes: item.sizes,
     alt: item.alt || item.title,
     href: item.href,
     buttonLabel: item.buttonLabel,

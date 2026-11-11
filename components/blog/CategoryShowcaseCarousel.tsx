@@ -1,13 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AngleLeftIcon, AngleRightIcon } from "@/components/layout/icons";
+import { WordPressImage } from "./WordPressImage";
 
 export interface CategoryShowcaseItem {
   title: string;
   src: string;
+  srcSet?: string;
+  sizes?: string;
   alt: string;
   href: string | null;
   buttonLabel: string;
@@ -196,11 +198,15 @@ function CategoryCard({ item }: { item: CategoryShowcaseItem }) {
 
       <div className="relative mt-[14px] h-[218px] w-[245px] max-w-full">
         {item.src ? (
-          <Image
+          <WordPressImage
             src={item.src}
+            srcSet={item.srcSet}
             alt={item.alt || item.title}
             fill
-            sizes="(min-width: 1024px) 297px, (min-width: 640px) 50vw, 260px"
+            sizes={
+              item.sizes ??
+              "(min-width: 1024px) 297px, (min-width: 640px) 50vw, 260px"
+            }
             className="object-contain"
           />
         ) : (

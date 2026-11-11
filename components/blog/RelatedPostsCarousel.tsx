@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { AngleLeftIcon, AngleRightIcon, ArrowUpRightIcon } from "@/components/layout/icons";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 
 interface RelatedPostsCarouselProps {
   posts: PostListItem[];
@@ -188,12 +189,15 @@ function RelatedPostCard({ post }: { post: PostListItem }) {
       <Link href={href} className="block">
         <div className="relative aspect-[339/162] w-full overflow-hidden bg-neutral-100 lg:aspect-[420/218]">
           {image?.sourceUrl && (
-            <Image
+            <WordPressImage
               src={image.sourceUrl}
+              srcSet={image.srcSet}
               alt={image.altText?.trim() || post.title}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover"
+              width={image.mediaDetails?.width}
+              height={image.mediaDetails?.height}
             />
           )}
           {category && (
@@ -229,6 +233,7 @@ function RelatedPostCard({ post }: { post: PostListItem }) {
                 alt={name}
                 fill
                 sizes="40px"
+                unoptimized
                 className="object-cover"
               />
             )}

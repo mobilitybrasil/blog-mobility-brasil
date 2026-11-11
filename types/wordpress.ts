@@ -62,6 +62,7 @@ export interface SEOData {
 export interface FeaturedImage {
   node: {
     sourceUrl: string;
+    srcSet?: string | null;
     altText: string | null;
     mediaDetails: {
       width: number | null;

@@ -16,6 +16,8 @@
 export interface CategoryShowcaseGalleryItem {
   title: string;
   src: string;
+  srcSet?: string;
+  sizes?: string;
   alt: string;
   href: string | null;
   buttonLabel: string;
@@ -32,6 +34,8 @@ const BUTTON_WRAPPER_RE =
 const BUTTON_INNER_LINK_RE =
   /<a\b[^>]*class="[^"]*wp-block-button__link[^"]*"[^>]*>([\s\S]*?)<\/a>/i;
 const IMG_SRC_RE = /<img[^>]*\bsrc=["']([^"']+)["']/i;
+const IMG_SRCSET_RE = /<img[^>]*\bsrcset=["']([^"']+)["']/i;
+const IMG_SIZES_RE = /<img[^>]*\bsizes=["']([^"']+)["']/i;
 const IMG_ALT_RE = /<img[^>]*\balt=["']([^"']*)["']/i;
 const HREF_RE = /\bhref=["']([^"']+)["']/i;
 const ID_RE = /\bid=["']([^"']+)["']/i;
@@ -51,6 +55,8 @@ export function parseCategoryShowcaseFromContent(
     const inner = m[1];
     return {
       src: inner.match(IMG_SRC_RE)?.[1] ?? "",
+      srcSet: inner.match(IMG_SRCSET_RE)?.[1],
+      sizes: inner.match(IMG_SIZES_RE)?.[1],
       alt: inner.match(IMG_ALT_RE)?.[1] ?? "",
     };
   });

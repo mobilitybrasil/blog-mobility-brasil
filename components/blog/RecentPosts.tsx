@@ -10,6 +10,7 @@ import {
 } from "@/components/layout/icons";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 
 interface RecentPostsProps {
   /** Posts já ordenados por data DESC. Serão consumidos até no máximo 9. */
@@ -216,12 +217,15 @@ function RecentPostCard({ post }: { post: PostListItem }) {
       <Link href={href} className="relative block">
         <div className="relative aspect-[325/162] w-full overflow-hidden bg-neutral-100 lg:aspect-[420/218]">
           {image?.sourceUrl && (
-            <Image
+            <WordPressImage
               src={image.sourceUrl}
+              srcSet={image.srcSet}
               alt={image.altText?.trim() || post.title}
               fill
               sizes="(min-width: 1024px) 33vw, 100vw"
               className="object-cover"
+              width={image.mediaDetails?.width}
+              height={image.mediaDetails?.height}
             />
           )}
         </div>
@@ -259,6 +263,7 @@ function RecentPostCard({ post }: { post: PostListItem }) {
                 alt={name}
                 fill
                 sizes="40px"
+                unoptimized
                 className="object-cover"
               />
             )}

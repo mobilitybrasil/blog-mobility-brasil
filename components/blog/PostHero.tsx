@@ -4,6 +4,7 @@ import { AngleRightIcon } from "@/components/layout/icons";
 import { formatDate, getReadingMinutes } from "@/lib/format";
 import { STORE_URL } from "@/lib/site";
 import { PostShareButton } from "./PostShareButton";
+import { WordPressImage } from "./WordPressImage";
 
 interface PostHeroProps {
   title: string;
@@ -15,6 +16,7 @@ interface PostHeroProps {
   } | null;
   featuredImage: {
     sourceUrl: string;
+    srcSet?: string | null;
     altText: string | null;
     width: number | null;
     height: number | null;
@@ -68,6 +70,7 @@ export function PostHero({
                 alt={author.name}
                 width={36}
                 height={36}
+                unoptimized
                 className="size-8 shrink-0 rounded-full object-cover sm:size-9"
               />
             )}
@@ -102,13 +105,16 @@ export function PostHero({
 
         {featuredImage?.sourceUrl && (
           <div className="relative h-[230px] w-full overflow-hidden rounded-lg sm:h-[412px]">
-            <Image
+            <WordPressImage
               src={featuredImage.sourceUrl}
+              srcSet={featuredImage.srcSet}
               alt={featuredImage.altText?.trim() || title}
-              fill
               priority
               sizes="(min-width: 1024px) calc(100vw - 108px), 100vw"
-              className="object-cover"
+              className="size-full object-cover"
+              fill
+              width={featuredImage.width}
+              height={featuredImage.height}
             />
           </div>
         )}

@@ -176,6 +176,7 @@ export default async function PostPage({ params }: PostPageProps) {
           featured?.sourceUrl
             ? {
                 sourceUrl: featured.sourceUrl,
+                srcSet: featured.srcSet,
                 altText: featured.altText,
                 width: featured.mediaDetails?.width ?? null,
                 height: featured.mediaDetails?.height ?? null,
