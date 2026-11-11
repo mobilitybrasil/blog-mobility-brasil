@@ -22,7 +22,7 @@ export const POST_LIST_FIELDS_FRAGMENT = /* GraphQL */ `
     featuredImage {
       node {
         sourceUrl(size: LARGE)
-        srcSet(size: FULL)
+        srcSet(size: BLOG_FULL)
         altText
         mediaDetails {
           width
