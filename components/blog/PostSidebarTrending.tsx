@@ -84,6 +84,7 @@ function TrendingPostCard({ post }: { post: PostListItem }) {
               alt={name}
               fill
               sizes="40px"
+              unoptimized
               className="object-cover"
             />
           )}

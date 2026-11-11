@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { formatDate, safeColor, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 
 interface PostCardProps {
   post: PostListItem;
@@ -30,13 +30,16 @@ export function PostCard({ post, priority = false }: PostCardProps) {
         className="relative block aspect-[16/9] overflow-hidden bg-neutral-100"
       >
         {featured?.sourceUrl ? (
-          <Image
+          <WordPressImage
             src={featured.sourceUrl}
+            srcSet={featured.srcSet}
             alt={featured.altText?.trim() || post.title}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition duration-500 group-hover:scale-105"
             priority={priority}
+            width={featured.mediaDetails?.width}
+            height={featured.mediaDetails?.height}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">

@@ -10,6 +10,7 @@ import {
 } from "@/components/layout/icons";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 
 interface PostSidebarRecentProps {
   posts: PostListItem[];
@@ -160,12 +161,15 @@ function SidebarRecentCard({ post }: { post: PostListItem }) {
       <Link href={href} className="relative block">
         <div className="relative aspect-[362/162] w-full overflow-hidden bg-neutral-100">
           {image?.sourceUrl && (
-            <Image
+            <WordPressImage
               src={image.sourceUrl}
+              srcSet={image.srcSet}
               alt={image.altText?.trim() || post.title}
               fill
               sizes="378px"
               className="object-cover"
+              width={image.mediaDetails?.width}
+              height={image.mediaDetails?.height}
             />
           )}
         </div>
@@ -203,6 +207,7 @@ function SidebarRecentCard({ post }: { post: PostListItem }) {
                 alt={name}
                 fill
                 sizes="40px"
+                unoptimized
                 className="object-cover"
               />
             )}

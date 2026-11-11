@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 import { LatestNewsMobileCarousel } from "./LatestNewsMobileCarousel";
 import { NewsletterCard } from "./NewsletterCard";
 import { SecondaryNewsCard } from "./SecondaryNewsCard";
@@ -35,13 +36,16 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
         className="relative block aspect-[870/366] overflow-hidden rounded-[8px] bg-neutral-100"
       >
         {image?.sourceUrl && (
-          <Image
+          <WordPressImage
             src={image.sourceUrl}
+            srcSet={image.srcSet}
             alt={image.altText?.trim() || post.title}
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
             priority
+            width={image.mediaDetails?.width}
+            height={image.mediaDetails?.height}
           />
         )}
       </Link>
@@ -70,6 +74,7 @@ function FeaturedNewsCard({ post }: { post: PostListItem }) {
                 alt={name}
                 fill
                 sizes="40px"
+                unoptimized
                 className="object-cover"
               />
             )}

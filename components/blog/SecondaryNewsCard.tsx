@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRightIcon } from "@/components/layout/icons";
 import { formatDate, stripHtml } from "@/lib/format";
 import type { PostListItem } from "@/types/wordpress";
+import { WordPressImage } from "./WordPressImage";
 
 interface SecondaryNewsCardProps {
   post: PostListItem;
@@ -31,12 +32,15 @@ export function SecondaryNewsCard({ post }: SecondaryNewsCardProps) {
       <Link href={href} className="block">
         <div className="relative aspect-[339/162] w-full overflow-hidden bg-neutral-100 lg:aspect-[402/137]">
           {image?.sourceUrl && (
-            <Image
+            <WordPressImage
               src={image.sourceUrl}
+              srcSet={image.srcSet}
               alt={image.altText?.trim() || post.title}
               fill
               sizes="(min-width: 1024px) 30vw, 100vw"
               className="object-cover"
+              width={image.mediaDetails?.width}
+              height={image.mediaDetails?.height}
             />
           )}
           {category && (
@@ -72,6 +76,7 @@ export function SecondaryNewsCard({ post }: SecondaryNewsCardProps) {
                 alt={name}
                 fill
                 sizes="40px"
+                unoptimized
                 className="object-cover"
               />
             )}
